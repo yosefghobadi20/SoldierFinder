@@ -1,0 +1,80 @@
+apply plugin: 'com.android.application'
+
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '26.0.2'
+    defaultConfig {
+        applicationId "com.nikosoft.soldierfinder"
+        minSdkVersion 14
+        targetSdkVersion 26
+        versionCode 5
+        versionName "2.3"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+    }
+//    defaultConfig {
+//        multiDexEnabled true
+//    }
+}
+
+
+
+dependencies {
+    //implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support.constraint:constraint-layout:+'
+    androidTestImplementation 'junit:junit:4.12'
+    implementation 'jp.wasabeef:recyclerview-animators:1.2.2'
+    implementation 'com.balysv:material-ripple:1.0.2'
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
+    implementation 'com.baoyz.pullrefreshlayout:library:1.2.0'
+    implementation 'com.getbase:floatingactionbutton:1.10.1'
+    implementation 'com.melnykov:floatingactionbutton:1.3.0'
+    implementation 'com.github.manuelpeinado.fadingactionbar:fadingactionbar:3.1.2'
+    implementation 'com.github.manuelpeinado.glassactionbar:glassactionbar:0.3.0'
+    implementation 'com.rengwuxian.materialedittext:library:2.1.4'
+    implementation 'fr.erictruong:materialedittext:0.2.0'
+    implementation 'com.github.hamsaadev:Persian-Date-Picker-Dialog:V1.0'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    //implementation 'com.android.support:support-v7:27.+'
+    implementation 'com.android.support:cardview-v7:27.+'
+    implementation 'com.android.support:recyclerview-v7:27.+'
+    implementation 'com.android.support:design:27.+'
+    implementation('com.weiwangcn.betterspinner:library-material:1.1.0') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.rengwuxian.materialedittext', module: 'library'
+    }
+    compile('com.github.smtchahal:MaterialSpinner:1.1.7') {
+        exclude group: 'com.nineoldandroids', module: 'library'
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
+    implementation 'com.github.michael-rapp:android-material-dialog:4.1.0'
+    implementation 'com.github.faruktoptas:FancyShowCaseView:1.0.0'
+    compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.0'
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+        maven { url "https://jitpack.io" }
+        maven {
+            url 'https://maven.google.com'
+            // Alternative URL is 'https://dl.google.com/dl/android/maven2/'
+        }
+        maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases' }
+    }
+    implementation files('libs/adsdkv10.jar')
+
+    //compile(name:'tapsell-sdk-android', ext:'aar')
+    implementation 'ir.tapsell.sdk:tapsell-sdk-android:3.1.9'
+}
+repositories {
+    mavenCentral()
+
+}

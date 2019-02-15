@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2ec7ff</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorDarkAccent">#aa89304e</color>
+    <color name="bg_toolbar">#424242</color>
+    <color name="textColor">#cc999999</color>
+    <color name="textColor_light">#cce4e4e4</color>
+    <color name="backColor">#24313e</color>
+    <color name="sepratorColor">#e6ff2b</color>
+    <color name="errorColor">#ccff2b24</color>
+
+    <color name="black_overlay">#66000000</color>
+</resources>

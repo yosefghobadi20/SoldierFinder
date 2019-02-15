@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:id="@+id/card_view"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="5dp"
+    card_view:cardUseCompatPadding="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <com.balysv.materialripple.MaterialRippleLayout
+        android:id="@+id/lay_ripple"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="0dp"
+    android:layout_gravity="right">
+
+    <TextView
+        android:id="@+id/txt_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="5dp"
+
+        android:text="احمد محمدی"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+         />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/img"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/nikosoft"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FFFFFFFF"
+        android:layout_gravity="right"
+        android:padding="5dp"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:id="@+id/txt_cur_padegan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txt_name"
+        android:layout_gravity="center"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="5dp"
+        android:text="از : کرمانشاه ، نفت شهر"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#9e9e9e" />
+
+    <TextView
+        android:id="@+id/txt_req_padegan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txt_cur_padegan"
+        android:layout_gravity="center"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="5dp"
+
+        android:layout_toEndOf="@+id/txt_request_date"
+        android:layout_toRightOf="@+id/txt_request_date"
+        android:text="به : تهران ، پرندک"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#9e9e9e" />
+
+    <TextView
+        android:id="@+id/txt_request_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+
+        android:layout_alignTop="@+id/txt_name"
+        android:paddingBottom="5dp"
+        android:text="1396/01/10"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#00acc1"
+        android:textSize="10dp" />
+
+    <!--<ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/img_fav"
+        android:layout_alignTop="@+id/txt_name"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/fav_off"
+        android:layout_marginLeft="3dp"
+        android:visibility="invisible"/>-->
+
+
+
+</RelativeLayout>
+    </com.balysv.materialripple.MaterialRippleLayout>
+</android.support.v7.widget.CardView>

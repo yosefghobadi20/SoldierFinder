@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nikosoft.soldierfinder.Activation"
+    android:background="@color/backColor">
+    <include
+        android:id="@+id/lay_app_bar"
+        layout="@layout/app_bar"></include>
+
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/lay_app_bar"
+    android:layout_alignParentBottom="false"
+    android:layout_above="@id/lay_btn_active">
+    <LinearLayout
+        android:id="@+id/lay_txt_activation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/txt_active_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="کد فعالسازی"
+        android:inputType="number"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelTextColor="@color/colorAccent"
+        app:met_maxCharacters="5"
+        app:met_primaryColor="@color/colorPrimary"
+        app:met_singleLineEllipsis="true"
+        app:met_textColor="@android:color/white"
+        app:met_textColorHint="@color/colorPrimary" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_resend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="visible"
+            android:shadowColor="@color/colorAccent"
+            android:text="ارسال دوباره کد فعالسازی پس از 60 ثانیه"
+            android:linksClickable="true"
+            android:enabled="false"/>
+    </LinearLayout>
+</ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/lay_btn_active"
+        android:layout_alignParentBottom="true"
+  >
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_second"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:shadowColor="@color/colorAccent"
+            />
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_activation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/colorPrimary"
+            android:text="فعالسازی"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

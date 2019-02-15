@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/appropriate_soldiers"
+        android:orderInCategory="100"
+        android:title="Setting"
+        app:showAsAction="always" />
+
+    <!--<item-->
+        <!--android:id="@+id/action_favorite"-->
+        <!--android:icon="@drawable/fav_off"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="Favorite"-->
+        <!--app:showAsAction="always" />-->
+
+    <item
+        android:id="@+id/action_back"
+        android:icon="@drawable/arrow"
+        android:orderInCategory="1000"
+        android:title="Back"
+        app:showAsAction="always" />
+
+</menu>

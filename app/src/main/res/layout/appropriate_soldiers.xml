@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="rtl"
+    tools:context="com.nikosoft.soldierfinder.AppropriateSoldiers">
+
+
+    <RelativeLayout
+        android:id="@+id/lay_rootview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        >
+        <include
+            android:id="@+id/lay_app_bar"
+            layout="@layout/app_bar"></include>
+        <com.baoyz.widget.PullRefreshLayout
+            android:id="@+id/lay_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/progress_bar_main"
+            android:layout_below="@+id/lay_app_bar">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                tools:listitem="@layout/list_row">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </com.baoyz.widget.PullRefreshLayout>
+        <ProgressBar
+            android:id="@+id/progress_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>

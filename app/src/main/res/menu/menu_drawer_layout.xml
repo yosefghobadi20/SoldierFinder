@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/menu_update"
+            android:icon="@drawable/update"
+            android:title="ارتقا نرم افزار" />
+        <item
+            android:id="@+id/menu_search"
+            android:icon="@drawable/appropriate_soldiers"
+            android:title="جستجو" />
+        <item
+            android:id="@+id/menu_edit"
+            android:icon="@drawable/edit_acc"
+            android:title="ویرایش اطلاعات" />
+        <item
+            android:id="@+id/menu_delete_info"
+            android:icon="@drawable/delete_person"
+            android:title="حذف اطلاعات" />
+        <item
+            android:id="@+id/menu_share"
+            android:icon="@drawable/share"
+            android:title="اشتراک گذاری نرم افزار" />
+        <item
+            android:id="@+id/menu_about"
+            android:icon="@drawable/info"
+            android:title="درباره نرم افزار سرباز یاب" />
+    </group>
+
+</menu>

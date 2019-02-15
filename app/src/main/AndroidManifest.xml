@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.nikosoft.soldierfinder">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:name=".SoldierFinder"
+        android:allowBackup="true"
+        android:icon="@drawable/soldier_finder"
+
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Main" />
+        <activity
+            android:name=".SplashScreen"
+            android:theme="@style/Theme.Transparent">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".G" />
+        <activity
+            android:name=".Details">
+            <!-- <meta-data -->
+            <!-- android:name="android.support.PARENT_ACTIVITY" -->
+            <!-- android:value="com.nikosoft.soldierfinder.Main" /> -->
+        </activity>
+        <activity
+            android:name=".profile"
+            android:label="مشخصات سرباز">
+
+            <!-- <meta-data -->
+            <!-- android:name="android.support.PARENT_ACTIVITY" -->
+            <!-- android:value="com.nikosoft.soldierfinder.Main" /> -->
+        </activity>
+        <activity
+            android:name=".Activation"
+            android:label="فعالسازی" />
+        <activity
+            android:name=".Search"
+            android:label="جستجو" />
+        <activity
+            android:name=".About_app"
+            android:label="درباره سربازیاب" />
+        <activity
+            android:name=".AppropriateSoldiers"
+            android:label="سربازان متناسب"></activity>
+
+
+        <receiver android:name="ir.myteam.adsdk.NetworkReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="ir.myteam.adsdk.ConnectionService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name="ir.myteam.adsdk.ConnectionService_"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <activity
+            android:name="ir.myteam.adsdk.AdShowActivity"
+            android:icon="@android:color/transparent"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+
+    </application>
+
+</manifest>

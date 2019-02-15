@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lay_drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:layoutDirection="rtl"
+    tools:openDrawer="start">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/app_bar"
+        />
+
+    <RelativeLayout
+        android:id="@+id/lay_rootview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        tools:context="com.nikosoft.soldierfinder.Main"
+
+        >
+
+        <com.baoyz.widget.PullRefreshLayout
+            android:id="@+id/lay_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/progress_bar_main"
+            android:layout_below="@id/lay_app_bar"
+            >
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recy"
+                android:layout_width="match_parent"
+
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                tools:listitem="@layout/list_row">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </com.baoyz.widget.PullRefreshLayout>
+
+
+
+        <ProgressBar
+            android:id="@+id/progress_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:visibility="gone" />
+
+        <com.melnykov.fab.FloatingActionButton
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/fab_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="10dp"
+            android:src="@drawable/profile"
+
+            app:fab_colorNormal="@color/colorPrimary"
+            android:layout_gravity="bottom|end"
+            app:elevation="10dp"/>
+    </RelativeLayout>
+
+</LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nv"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/header"
+        app:menu="@menu/menu_drawer_layout"
+        android:fitsSystemWindows="true">
+
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                <!--&lt;!&ndash;android:id="@+id/txt_ver"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:gravity="bottom|center"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:padding="10dp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:text="نرم افزار سرباز یاب نسخه 1.0.1 تهیه شده توسط گروه نرم افزاری نیکوسافت"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:textSize="10dp" />&ndash;&gt;-->
+        <!--</RelativeLayout>-->
+
+    </android.support.design.widget.NavigationView>
+</android.support.v4.widget.DrawerLayout>

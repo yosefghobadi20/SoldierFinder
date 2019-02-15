@@ -1,0 +1,110 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nikosoft.soldierfinder.frag_nav"
+    android:id="@+id/frame_layout">
+
+
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:background="@color/bg_toolbar"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/nikosoft" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/img"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/lay_icon"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="30dp"
+                android:paddingRight="10dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/update"
+                    android:layout_marginBottom="20dp"/>
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/search"
+                    android:layout_marginBottom="20dp"/>
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/edit_acc"
+                    android:layout_marginBottom="20dp"/>
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/info"
+                    android:layout_marginBottom="20dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="30dp"
+                android:paddingLeft="10dp">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="ارتقا به نسخه کامل"
+                    android:layout_marginBottom="20dp"/>
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="جستجو"
+                    android:layout_marginBottom="20dp"/>
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="ویرایش اطلاعات"
+                    android:layout_marginBottom="20dp"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="درباره نرم افزار سرباز یاب"
+                    android:layout_marginBottom="10dp"/>
+
+
+            </LinearLayout>
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/txt_ver"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="10dp"
+                android:gravity="bottom|center"
+                android:padding="10dp"
+                android:text="نرم افزار سرباز یاب نسخه 1.0.1 تهیه شده توسط گروه نرم افزاری نیکوسافت" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>
