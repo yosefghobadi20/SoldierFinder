@@ -15,7 +15,7 @@
         android:id="@+id/lay_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/lay_submit"
+
         android:layout_alignParentBottom="false"
         android:layout_below="@id/lay_app_bar"
         android:orientation="vertical"
