@@ -174,7 +174,7 @@
                     android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی"/>
 
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
@@ -184,7 +184,7 @@
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                     android:textColor="@color/colorPrimary" />
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_sendout_date"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -217,7 +217,7 @@
                     app:met_textColor="@android:color/white"
                     app:met_textColorHint="@color/colorPrimary" />
 
-                <android.support.v7.widget.SwitchCompat
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sw_cur_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -231,7 +231,7 @@
                     android:textOn="بله"
                     app:showText="true" />
 
-                <android.support.v7.widget.SwitchCompat
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sw_movment_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -325,7 +325,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:mrl_rippleOverlay="true" >
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

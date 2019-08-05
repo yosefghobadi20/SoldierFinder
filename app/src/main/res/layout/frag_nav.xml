@@ -65,23 +65,23 @@
                 android:paddingTop="30dp"
                 android:paddingLeft="10dp">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
                     android:text="ارتقا به نسخه کامل"
                     android:layout_marginBottom="20dp"/>
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
                     android:text="جستجو"
                     android:layout_marginBottom="20dp"/>
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
                     android:text="ویرایش اطلاعات"
                     android:layout_marginBottom="20dp"/>
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
                     android:text="درباره نرم افزار سرباز یاب"

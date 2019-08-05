@@ -1,12 +1,12 @@
 package com.nikosoft.soldierfinder;
 
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,15 +16,10 @@ import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 
-import ir.tapsell.sdk.Tapsell;
 import ir.tapsell.sdk.TapsellAd;
-import ir.tapsell.sdk.TapsellAdRequestListener;
-import ir.tapsell.sdk.TapsellAdRequestOptions;
 import ir.tapsell.sdk.TapsellAdShowListener;
 import ir.tapsell.sdk.TapsellShowOptions;
 import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
-
-import static ir.tapsell.sdk.TapsellAdRequestOptions.CACHE_TYPE_CACHED;
 
 public class AppropriateSoldiers extends AppCompatActivity {
 
@@ -115,10 +110,31 @@ public class AppropriateSoldiers extends AppCompatActivity {
             }
         });
         //show adver
-        showAd();
+        showAd(G.adver);
+    }
+    public void showAd(TapsellAd ad)
+    {
+        TapsellShowOptions options=new TapsellShowOptions();
+        options.setBackDisabled(true);
+
+       ad.show(G.context, options, new TapsellAdShowListener() {
+            @Override
+            public void onOpened(TapsellAd tapsellAd) {
+
+            }
+
+            @Override
+            public void onClosed(TapsellAd tapsellAd) {
+            }
+        });
+
+
+        G.adver=null;
     }
 
-    private void showAd() {
+
+
+    /*private void showAd() {
         Tapsell.requestAd(G.context, "5b5599b96c1dec000183928b"	, new TapsellAdRequestOptions(CACHE_TYPE_CACHED), new TapsellAdRequestListener() {
             @Override
             public void onError (String error)
@@ -163,7 +179,7 @@ public class AppropriateSoldiers extends AppCompatActivity {
                 Log.i("Tapsell","Expiring");
             }
         });
-    }
+    }*/
 
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -294,4 +310,9 @@ public class AppropriateSoldiers extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+    }
 }

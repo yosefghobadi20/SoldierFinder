@@ -2,14 +2,15 @@ package com.nikosoft.soldierfinder;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
 import java.util.ArrayList;
 
 import ir.tapsell.sdk.Tapsell;
+import ir.tapsell.sdk.TapsellAd;
 
 public class G extends AppCompatActivity {
 
@@ -27,6 +28,7 @@ public class G extends AppCompatActivity {
     public static int rate=0;
     public static int organ=0;
     public static int sub_organ=0;
+    public static TapsellAd adver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

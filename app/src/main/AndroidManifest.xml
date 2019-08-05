@@ -16,7 +16,6 @@
         android:name=".SoldierFinder"
         android:allowBackup="true"
         android:icon="@drawable/soldier_finder"
-
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Main" />

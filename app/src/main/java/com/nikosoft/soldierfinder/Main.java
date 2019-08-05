@@ -1,23 +1,23 @@
 package com.nikosoft.soldierfinder;
 
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+
+import androidx.annotation.NonNull;
+
+import com.crashlytics.android.Crashlytics;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -35,6 +35,7 @@ import de.mrapp.android.dialog.MaterialDialog;
 import de.mrapp.android.dialog.ProgressDialog;
 import de.mrapp.android.dialog.model.Dialog;
 
+import io.fabric.sdk.android.services.common.Crash;
 import ir.tapsell.sdk.*;
 import ir.tapsell.sdk.TapsellAd;
 import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
@@ -43,7 +44,6 @@ import me.toptas.fancyshowcase.FancyShowCaseView;
 import me.toptas.fancyshowcase.OnViewInflateListener;
 
 import static ir.tapsell.sdk.TapsellAdRequestOptions.CACHE_TYPE_CACHED;
-import static ir.tapsell.sdk.TapsellShowOptions.ROTATION_LOCKED_PORTRAIT;
 
 public class Main extends G implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -67,6 +67,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
     public Utility utility;
     private boolean fillProfile = false;
 
+    public TapsellAd adver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +79,6 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             profile = true;
 
         }
-
 
         //send install and version info
         if(!(utility.RetrievePref("Installinfo").equals(BuildConfig.VERSION_CODE+"")))
@@ -212,6 +212,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         if(Utility.isNetworkAvailable(Main.this)) {
             new CheckPay().execute();
             new CheckNewVer().execute();
+            loadAd();
         }
     }
 
@@ -697,6 +698,66 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
 
     }
 
+    public void showAd(TapsellAd ad)
+    {
+        TapsellShowOptions options=new TapsellShowOptions();
+        options.setBackDisabled(true);
+
+
+        ad.show(G.context, options, new TapsellAdShowListener() {
+            @Override
+            public void onOpened(TapsellAd tapsellAd) {
+
+            }
+
+            @Override
+            public void onClosed(TapsellAd tapsellAd) {
+
+            }
+        });
+    }
+
+    private void loadAd() {
+        Tapsell.requestAd(G.context, "5b5599b96c1dec000183928b"	, new TapsellAdRequestOptions(CACHE_TYPE_CACHED), new TapsellAdRequestListener() {
+
+
+            @Override
+            public void onError (String error)
+            {
+                Log.i("Tapsell",error);
+            }
+
+            @Override
+            public void onAdAvailable (TapsellAd ad)
+            {
+
+                G.adver=ad;
+                Log.i("Tapsell","Ad is available");
+
+
+            }
+
+            @Override
+            public void onNoAdAvailable ()
+            {
+                Log.i("Tapsell","NoAdAvailable");
+            }
+
+            @Override
+            public void onNoNetwork ()
+            {
+                Log.i("Tapsell","NoNetwork");
+            }
+
+            @Override
+            public void onExpiring (TapsellAd ad)
+            {
+                Log.i("Tapsell","Expiring");
+            }
+        });
+
+
+    }
 
     //get appropriate soldiers
     class GetAppropriateSoldiers extends AsyncTask<Void, Void, String> {
@@ -710,6 +771,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         protected void onPreExecute() {
 
             super.onPreExecute();
+
             //show dialog for show connect progress
             dialogbuilder = new ProgressDialog.Builder(Main.this);
             dialogbuilder.setTitle("در حال دریافت اطلاعات");
@@ -728,6 +790,8 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             dialogbuilder.setMessageColor(getResources().getColor(android.R.color.white));
             dialog = dialogbuilder.create();
             dialog.show();
+
+
         }
 
         @Override
@@ -829,7 +893,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (running) {
-                Main.ShowMessage(s);
+
                 if (s.equals("null"))
                     Main.ShowMessage ("اطلاعات شما ثبت نشده است");
                 else if(s.equals("true"))

@@ -1,34 +1,28 @@
 package com.nikosoft.soldierfinder;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
+
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+
+import androidx.core.content.ContextCompat;
 //import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 //import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 
-import com.manuelpeinado.glassactionbar.GlassActionBarHelper;
 
 public class Details extends G {
     public Intent intent;

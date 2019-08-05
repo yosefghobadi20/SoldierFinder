@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "84598952606",
+    "firebase_url": "https://soldierfinder-68af4.firebaseio.com",
+    "project_id": "soldierfinder-68af4",
+    "storage_bucket": "soldierfinder-68af4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:84598952606:android:5dc45b878e99f6d8",
+        "android_client_info": {
+          "package_name": "com.nikosoft.soldierfinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "84598952606-ti7cbaemron9tou18icci2ceemqc9onr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_LWXk1VDf6mn-XPN6r0R8cpDAeIejd9w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "84598952606-ti7cbaemron9tou18icci2ceemqc9onr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

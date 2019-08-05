@@ -39,7 +39,7 @@
         app:met_textColor="@android:color/white"
         app:met_textColorHint="@color/colorPrimary" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_resend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
         android:id="@+id/lay_btn_active"
         android:layout_alignParentBottom="true"
   >
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_second"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
             android:visibility="gone"
             android:shadowColor="@color/colorAccent"
             />
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_activation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

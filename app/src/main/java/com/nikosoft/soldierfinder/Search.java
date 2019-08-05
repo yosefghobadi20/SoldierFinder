@@ -2,29 +2,20 @@ package com.nikosoft.soldierfinder;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Interpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.rengwuxian.materialedittext.MaterialEditText;
-
-import de.mrapp.android.dialog.MaterialDialog;
 import de.mrapp.android.dialog.ProgressDialog;
-import ir.hamsaa.persiandatepicker.Listener;
 import ir.hamsaa.persiandatepicker.PersianDatePickerDialog;
 import ir.hamsaa.persiandatepicker.util.PersianCalendar;
 import smtchahal.materialspinner.MaterialSpinner;
