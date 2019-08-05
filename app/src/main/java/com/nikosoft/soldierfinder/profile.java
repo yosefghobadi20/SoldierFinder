@@ -435,7 +435,6 @@ public class profile extends G {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if (s.equals("اطلاعات با موفقیت ثبت شد.")) {
-                        utility.SavePref(Utility.FILL_PROFILE,"true");
                         Intent intent = new Intent(profile.this, Main.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
