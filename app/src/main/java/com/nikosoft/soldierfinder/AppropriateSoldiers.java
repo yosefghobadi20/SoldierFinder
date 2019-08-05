@@ -110,6 +110,7 @@ public class AppropriateSoldiers extends AppCompatActivity {
             }
         });
         //show adver
+        if(G.adver!=null)
         showAd(G.adver);
     }
     public void showAd(TapsellAd ad)

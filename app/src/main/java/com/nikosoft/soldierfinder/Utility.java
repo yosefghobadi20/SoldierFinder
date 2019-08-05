@@ -35,6 +35,11 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Yosef on 28/03/2017.
  */
 public class Utility {
+<<<<<<< Updated upstream
+=======
+    public static final String NEW_VERSION ="new_version" ;
+    public static final String FILL_PROFILE ="fill_profile" ;
+>>>>>>> Stashed changes
     static Context _context;
 
 
