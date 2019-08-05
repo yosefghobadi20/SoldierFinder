@@ -69,10 +69,10 @@ dependencies {
         }
         maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases' }
     }
-    implementation files('libs/adsdkv10.jar')
+
 
     //compile(name:'tapsell-sdk-android', ext:'aar')
-    implementation 'ir.tapsell.sdk:tapsell-sdk-android:3.1.9'
+    implementation 'ir.tapsell.sdk:tapsell-sdk-android:4.3.5'
 }
 repositories {
     mavenCentral()

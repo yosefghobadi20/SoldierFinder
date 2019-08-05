@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.provider.ContactsContract;
 
-import ir.myteam.adsdk.AdCommon;
 
 public class SplashScreen extends Activity {
 

@@ -58,31 +58,11 @@
             android:label="سربازان متناسب"></activity>
 
 
-        <receiver android:name="ir.myteam.adsdk.NetworkReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-            </intent-filter>
-        </receiver>
 
-        <service
-            android:name="ir.myteam.adsdk.ConnectionService"
-            android:enabled="true"
-            android:exported="true" />
 
-        <service
-            android:name="ir.myteam.adsdk.ConnectionService_"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <activity
-            android:name="ir.myteam.adsdk.AdShowActivity"
-            android:icon="@android:color/transparent"
-            android:label=""
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity android:name="ir.tapsell.sdk.TapsellAdActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" >
+        </activity>
 
     </application>
 

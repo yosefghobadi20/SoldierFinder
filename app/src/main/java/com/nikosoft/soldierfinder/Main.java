@@ -35,7 +35,6 @@ import de.mrapp.android.dialog.MaterialDialog;
 import de.mrapp.android.dialog.ProgressDialog;
 import de.mrapp.android.dialog.model.Dialog;
 
-import ir.myteam.adsdk.AdCommon;
 import ir.tapsell.sdk.*;
 import ir.tapsell.sdk.TapsellAd;
 import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
@@ -79,8 +78,6 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             profile = true;
 
         }
-        //Advertisement
-        AdCommon.init(Main.this, "eBTh15mSEr", false, true);
 
 
         //send install and version info
@@ -217,6 +214,8 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             new CheckNewVer().execute();
         }
     }
+
+
 
     //refresh Soldiers list
     public static void RefreshSoldiersList() {
@@ -681,7 +680,12 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://nikosoft.ir/home/downloadAPK")));
                         }
                     });
-                    dialogBuilder.setNegativeButton("بی خیال", null);
+                    dialogBuilder.setNegativeButton("خروج", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            utility.closeApp();
+                        }
+                    });
                     MaterialDialog dialog = dialogBuilder.create();
                     dialog.show();
                 }

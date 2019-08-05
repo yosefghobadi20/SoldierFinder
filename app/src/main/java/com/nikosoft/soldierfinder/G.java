@@ -9,6 +9,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import ir.tapsell.sdk.Tapsell;
+
 public class G extends AppCompatActivity {
 
     public  static ArrayList<Soldier_Info> AllSoldiers = new ArrayList<>();
@@ -31,6 +33,7 @@ public class G extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context=this;
 CurrentActivity=this;
+        Tapsell.initialize(this,"lothqbsmdmcfbrepfjsfcgmmesnnfgoqrddgfcceconlbjkijironrpagqkjggcscqsrmm");
 
     }
     public static void GetNewSoldiers(Context context)

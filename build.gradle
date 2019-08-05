@@ -29,7 +29,7 @@ allprojects {
         }
 
         maven {
-            url 'https://dl.bintray.com/tapsell/maven'
+            url 'https://dl.bintray.com/tapsellorg/maven'
         }
     }
 }

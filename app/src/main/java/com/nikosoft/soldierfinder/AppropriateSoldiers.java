@@ -16,7 +16,15 @@ import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 
+import ir.tapsell.sdk.Tapsell;
+import ir.tapsell.sdk.TapsellAd;
+import ir.tapsell.sdk.TapsellAdRequestListener;
+import ir.tapsell.sdk.TapsellAdRequestOptions;
+import ir.tapsell.sdk.TapsellAdShowListener;
+import ir.tapsell.sdk.TapsellShowOptions;
 import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
+
+import static ir.tapsell.sdk.TapsellAdRequestOptions.CACHE_TYPE_CACHED;
 
 public class AppropriateSoldiers extends AppCompatActivity {
 
@@ -60,7 +68,7 @@ public class AppropriateSoldiers extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 try {
-                    //GetDataOnPullDown();
+                    GetDataOnPullDown();
 
                 } catch (Exception e) {
                     Log.i("OnRefresh: ", e.getStackTrace() + "");
@@ -98,7 +106,7 @@ public class AppropriateSoldiers extends AppCompatActivity {
                         if (loading) {
 
                             loading = false;
-                            //GetInfo();
+                            GetInfo();
 
                         }
                         loading = true;
@@ -106,9 +114,56 @@ public class AppropriateSoldiers extends AppCompatActivity {
                 }
             }
         });
+        //show adver
+        showAd();
     }
 
+    private void showAd() {
+        Tapsell.requestAd(G.context, "5b5599b96c1dec000183928b"	, new TapsellAdRequestOptions(CACHE_TYPE_CACHED), new TapsellAdRequestListener() {
+            @Override
+            public void onError (String error)
+            {
+                Log.i("Tapsell",error);
+            }
 
+            @Override
+            public void onAdAvailable (TapsellAd ad)
+            {
+                Log.i("Tapsell","Ad is available");
+                TapsellShowOptions options=new TapsellShowOptions();
+                options.setBackDisabled(true);
+                ad.show(G.context, options, new TapsellAdShowListener() {
+                    @Override
+                    public void onOpened(TapsellAd tapsellAd) {
+
+                    }
+
+                    @Override
+                    public void onClosed(TapsellAd tapsellAd) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onNoAdAvailable ()
+            {
+                Log.i("Tapsell","NoAdAvailable");
+            }
+
+            @Override
+            public void onNoNetwork ()
+            {
+                Log.i("Tapsell","NoNetwork");
+            }
+
+            @Override
+            public void onExpiring (TapsellAd ad)
+            {
+                Log.i("Tapsell","Expiring");
+            }
+        });
+    }
 
 
     public boolean onCreateOptionsMenu(Menu menu) {

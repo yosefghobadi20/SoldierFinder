@@ -580,6 +580,10 @@ public class Utility {
         }
 
     }
-
+    public void closeApp() {
+        //close app
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);
+    }
 
 }
