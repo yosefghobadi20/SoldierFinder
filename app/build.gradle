@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.nikosoft.soldierfinder"
         minSdkVersion 14
@@ -51,13 +51,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.rengwuxian.materialedittext', module: 'library'
     }
-    compile('com.github.smtchahal:MaterialSpinner:1.1.7') {
+    implementation('com.github.smtchahal:MaterialSpinner:1.1.7') {
         exclude group: 'com.nineoldandroids', module: 'library'
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
     implementation 'com.github.michael-rapp:android-material-dialog:4.1.0'
     implementation 'com.github.faruktoptas:FancyShowCaseView:1.0.0'
-    compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.0'
+    implementation 'com.google.code.ksoap2-android:ksoap2-android:3.6.0'
     repositories {
         flatDir {
             dirs 'libs'
@@ -72,7 +72,7 @@ dependencies {
     implementation files('libs/adsdkv10.jar')
 
     //compile(name:'tapsell-sdk-android', ext:'aar')
-    implementation 'ir.tapsell.sdk:tapsell-sdk-android:3.1.9'
+    implementation 'ir.tapsell.sdk:tapsell-sdk-android:4.3.3'
 }
 repositories {
     mavenCentral()

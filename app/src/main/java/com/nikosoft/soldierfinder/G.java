@@ -9,6 +9,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import ir.tapsell.sdk.Tapsell;
+
 public class G extends AppCompatActivity {
 
     public  static ArrayList<Soldier_Info> AllSoldiers = new ArrayList<>();
@@ -25,13 +27,14 @@ public class G extends AppCompatActivity {
     public static int rate=0;
     public static int organ=0;
     public static int sub_organ=0;
+    public static String ZONE_ID="5b5599b96c1dec000183928b";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context=this;
 CurrentActivity=this;
-
+        Tapsell.initialize(this, ZONE_ID);
     }
     public static void GetNewSoldiers(Context context)
     {

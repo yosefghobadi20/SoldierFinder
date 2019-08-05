@@ -67,6 +67,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
     private boolean profile = false;
     public Utility utility;
     private boolean fillProfile = false;
+    private TapsellAd ad = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
 
         }
         //Advertisement
-        AdCommon.init(Main.this, "eBTh15mSEr", false, true);
+        //AdCommon.init(Main.this, "eBTh15mSEr", false, true);
 
 
         //send install and version info
@@ -215,7 +216,13 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         if(Utility.isNetworkAvailable(Main.this)) {
             new CheckPay().execute();
             new CheckNewVer().execute();
+
+            requestAd(G.ZONE_ID);
+            showAd();
+
         }
+
+
     }
 
     //refresh Soldiers list
@@ -849,6 +856,8 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         }
 
 
+
+
     }
 
 
@@ -891,6 +900,66 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
 
     }
 
+    private void requestAd(String zoneId) {
+        Tapsell.requestAd(Main.this,
+                zoneId,
+                new TapsellAdRequestOptions(),
+                new TapsellAdRequestListener() {
+                    @Override
+                    public void onAdAvailable(TapsellAd tapsellAd) {
+                        Toast.makeText(Main.this, "ad available", Toast.LENGTH_SHORT).show();
+
+
+                        ad = tapsellAd;
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onNoAdAvailable() {
+                        Toast.makeText(Main.this, "ad not available", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onNoNetwork() {
+
+                    }
+
+                    @Override
+                    public void onExpiring(TapsellAd tapsellAd) {
+
+                    }
+                });
+    }
+
+    private void showAd() {
+        if (ad == null) {
+
+            return;
+        }
+
+        ad.show(Main.this,
+                new TapsellShowOptions(),
+                new TapsellAdShowListener() {
+                    @Override
+                    public void onOpened(TapsellAd tapsellAd) {
+
+                    }
+
+                    @Override
+                    public void onClosed(TapsellAd tapsellAd) {
+
+                    }
+                });
+
+        ad = null;
+
+    }
 }
 
 
