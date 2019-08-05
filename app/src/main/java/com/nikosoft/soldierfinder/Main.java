@@ -1,32 +1,23 @@
 package com.nikosoft.soldierfinder;
 
 
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
-import com.farsitel.bazaar.IUpdateCheckService;
 import com.google.android.material.navigation.NavigationView;
-
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.os.Bundle;
-
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
-
-import android.os.IBinder;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -39,12 +30,6 @@ import com.melnykov.fab.FloatingActionButton;
 
 
 import com.baoyz.widget.PullRefreshLayout;
-import com.nikosoft.soldierfinder.util.IabHelper;
-import com.nikosoft.soldierfinder.util.IabResult;
-import com.nikosoft.soldierfinder.util.Inventory;
-import com.nikosoft.soldierfinder.util.Purchase;
-
-import java.util.ArrayList;
 
 import de.mrapp.android.dialog.MaterialDialog;
 import de.mrapp.android.dialog.ProgressDialog;
@@ -82,25 +67,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
     public Utility utility;
     private boolean fillProfile = false;
 
-    //bazzar fields-----------------------
-    static final String TAG = "Bazar";
-
-    // SKUs for our products: the premium upgrade (non-consumable)
-    static final String SKU_PREMIUM = "upgrade";
-
-    // Does the user have the premium upgrade?
-    boolean mIsPremium = false;
-
-    // (arbitrary) request code for the purchase flow
-    static final int RC_REQUEST = 100;
-
-    // The helper object
-    IabHelper mHelper;
-
-    IUpdateCheckService service;
-    UpdateServiceConnection connection;
-    //----------------------------------------
-
+    public TapsellAd adver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +81,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         }
 
         //send install and version info
-        if (!(utility.RetrievePref("Installinfo").equals(BuildConfig.VERSION_CODE + "")))
+        if(!(utility.RetrievePref("Installinfo").equals(BuildConfig.VERSION_CODE+"")))
             new SendInstallInfo().execute();
 
         Soldier_adapter = new Soldier_adapter(G.context, G.AllSoldiers);
@@ -144,7 +111,9 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
 
         //load more soldiers from server when list pull down......................................
         refreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
-        refreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+        refreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener()
+
+        {
             @Override
             public void onRefresh() {
                 try {
@@ -156,7 +125,9 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             }
         });
 
-        fab_profile.setOnClickListener(new View.OnClickListener() {
+        fab_profile.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 if (Utility.isNetworkAvailable(G.context))
@@ -170,7 +141,9 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         //Lazy loading.............................................................................
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(G.context);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+
+        {
 
             int totalItemCount = 0;
             int postVisiblesItems = 0;
@@ -215,7 +188,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             fan.dismissListener(new DismissListener() {
                 @Override
                 public void onDismiss(String id) {
-                    //profile
+                //profile
                     new FancyShowCaseView.Builder(Main.this)
                             .focusOn(fab_profile)
                             .title("برای اینکه بتونیم سرباز متناسب شما رو پیدا کنیم، باید اطلاعات خودتو وارد کنی!")
@@ -232,128 +205,17 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             fan.build().show();
 
 
+
         }
 
 
-        if (Utility.isNetworkAvailable(Main.this)) {
-            //new CheckPay().execute();
+        if(Utility.isNetworkAvailable(Main.this)) {
+            new CheckPay().execute();
             new CheckNewVer().execute();
             loadAd();
         }
     }
 
-    android.app.ProgressDialog progressDialog;
-
-    private void showProgress() {
-        progressDialog = new android.app.ProgressDialog(this);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("در حال اتصال");
-        progressDialog.show();
-    }
-
-    private void prepareBazarWithHelper() {
-        //bazar buy helper
-        if (utility.isConnectedInternet(this)) {
-            try {
-
-
-                //اتصال به بازار با mHelper
-                mHelper = new IabHelper(this, utility.getRSAKey(this));
-                Log.d(TAG, "Starting setup.");
-
-
-                mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-                    @Override
-                    public void onIabSetupFinished(IabResult result) {
-
-
-                        if (!result.isSuccess()) {
-                            Toast.makeText(Main.this, result.getMessage() + "خطا در بر قراری ارتباط \nوارد حساب خود در کافه بازار شوید", Toast.LENGTH_LONG).show();
-                            progressDialog.dismiss();
-                        } else {
-                            Log.d(TAG, "Query inventory start.");
-
-                            //لیست محصولات قابل خریداری
-                            ArrayList skuList = new ArrayList();
-                            skuList.add(SKU_PREMIUM);
-
-                            //ارسال درخواست برای دریافت محصولات
-                            mHelper.queryInventoryAsync(true, skuList, new IabHelper.QueryInventoryFinishedListener() {
-                                @Override
-                                public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
-                                    Log.d(TAG, "Query inventory finished.");
-                                    if (result.isFailure()) {
-                                        Toast.makeText(Main.this, "لطفا وارد حساب بازار خود شوید", Toast.LENGTH_SHORT).show();
-
-                                        //صفحه ورود به بازار
-                                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                                        intent.setData(Uri.parse("bazaar://login"));
-                                        intent.setPackage("com.farsitel.bazaar");
-                                        startActivity(intent);
-
-
-                                        Log.d(TAG, "Failed to query inventory: " + result);
-                                        if (progressDialog.isShowing())
-                                            progressDialog.dismiss();
-                                        return;
-                                    } else {
-                                        Log.d(TAG, "Query inventory was successful.");
-
-                                        if (progressDialog.isShowing())
-                                            progressDialog.dismiss();
-
-                                        //-----------------------------------------دریافت اشتراک خریده شده توسط کاربر و اعمال آن
-                                        if (inventory.hasPurchase(SKU_PREMIUM)) {
-                                            Log.d(TAG, "اشتراک ماهانه" + inventory.getPurchase(SKU_PREMIUM).getOriginalJson());
-                                            //show phone number to user
-                                            utility.SavePref("ispayed", "ok");
-                                            Toast.makeText(Main.this, "برنامه قبلا ارتقا پیدا کرده است", Toast.LENGTH_SHORT).show();
-
-
-                                        } else {
-                                            utility.SavePref("ispayed", "error");
-
-                                            mHelper.launchPurchaseFlow(Main.this, SKU_PREMIUM, 1, new IabHelper.OnIabPurchaseFinishedListener() {
-                                                @Override
-                                                public void onIabPurchaseFinished(IabResult result, Purchase info) {
-                                                    if (result.isFailure()) {
-                                                        Toast.makeText(Main.this, "خطا در پرداخت", Toast.LENGTH_LONG).show();
-                                                        return;
-                                                    }
-                                                    if (info.getSku().equals(SKU_PREMIUM) & info.getDeveloperPayload().equals("soldierfinder")) {
-                                                        Toast.makeText(Main.this, "پرداخت با موفقیت انجام شد", Toast.LENGTH_LONG).show();
-                                                        utility.SavePref("ispayed", "ok");
-
-                                                    } else
-                                                        Toast.makeText(Main.this, "پرداخت با خطا مواجه شد", Toast.LENGTH_LONG).show();
-                                                }
-                                            }, "soldierfinder");
-                                        }
-                                    }
-
-                                    Log.d(TAG, "Initial inventory query finished; enabling main UI.");
-                                    if (progressDialog.isShowing())
-                                        progressDialog.dismiss();
-                                }
-
-                            });
-                        }
-                    }
-                });
-
-
-            } catch (Exception ex) {
-                Toast.makeText(this, "برنامه بازار روی تلفن شما نصب نیست\nاگر این برنامه را از کافه بازار دریافت نکرده اید ،برنامه را از بازار دریافت کنید", Toast.LENGTH_LONG).show();
-                ex.printStackTrace();
-                if (progressDialog.isShowing())
-                    progressDialog.dismiss();
-            }
-        } else {
-            Toast.makeText(this, "عدم اتصال به اینترنت", Toast.LENGTH_SHORT).show();
-            if (progressDialog.isShowing())
-                progressDialog.dismiss();
-        }
-    }
 
 
     //refresh Soldiers list
@@ -414,7 +276,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
                 ShowMessage("خطا در خواندن اطلاعات از سرور)");
                 return false;
             } else {
-                String s = utility.Deserialize(res, G.AllSoldiers);
+                String s = utility.Deserialize(res,G.AllSoldiers);
                 if (s.equals("error"))
                     ShowMessage("خطا در نوشتن اطلاعات");
                 return true;
@@ -482,17 +344,9 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             {
                 String s = utility.RetrievePref("ispayed");
                 if (s.equals("buy")) {
-
-                    //نمایش دیالوگ برای اتصال به بازار
-
-                    showProgress();
-                    prepareBazarWithHelper();
-
-
-
-                    /*Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://nikosoft.ir/home/buysoldierfinder?serial=" + utility.getUniquePsuedoID()));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://nikosoft.ir/home/buysoldierfinder?serial=" + utility.getUniquePsuedoID()));
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);*/
+                    startActivity(intent);
                 } else if (s.equals("ok")) {
                     Toast.makeText(Main.this, "نرم افزار قبلا ارتقا یافته است!", Toast.LENGTH_LONG).show();
                 } else if (s.equals("error")) {
@@ -502,7 +356,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             }
 
         }
-        if (id == R.id.menu_search) {
+     if (id == R.id.menu_search) {
             if (search) {
                 new FancyShowCaseView.Builder(this)
                         .focusOn(findViewById(item.getItemId()))
@@ -531,7 +385,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             dialogBuilder.setPositiveButton("بله", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    if (Utility.isNetworkAvailable(Main.this))
+                    if(Utility.isNetworkAvailable(Main.this))
                         new DeleteUserInfo().execute();
                 }
             });
@@ -542,9 +396,11 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             dialogBuilder.setMessageColor(getResources().getColor(R.color.textColor));
             MaterialDialog dialog = dialogBuilder.create();
             dialog.show();
-        } else if (id == R.id.menu_about) {
+        }
+        else if (id == R.id.menu_about) {
             startActivity(new Intent(Main.this, About_app.class));
-        } else if (id == R.id.menu_share) {
+        }
+        else if (id == R.id.menu_share) {
             try {
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
@@ -604,7 +460,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         @Override
         protected Soldier_Info doInBackground(Void... voids) {
             if (running)
-                return utility.Deserialize_soldier_info(utility.GetSoldierInfo(utility.getUniquePsuedoID(), "GetSoldierInfo"));
+                return utility.Deserialize_soldier_info(utility.GetSoldierInfo(utility.getUniquePsuedoID(),"GetSoldierInfo"));
             else
                 return null;
         }
@@ -758,11 +614,12 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         @Override
         protected String doInBackground(Void... voids) {
             if (running) {
-                Soldier_Info soldier_info = utility.Deserialize_soldier_info(utility.GetSoldierInfo(utility.getUniquePsuedoID(), "GetSoldierInfo"));
+                Soldier_Info soldier_info = utility.Deserialize_soldier_info(utility.GetSoldierInfo(utility.getUniquePsuedoID(),"GetSoldierInfo"));
                 if (soldier_info.Name == null) {
                     fillProfile = true;
-                } else
-                    fillProfile = false;
+                }
+                else
+                    fillProfile=false;
                 return utility.CheckPayment();
             } else
                 return null;
@@ -790,7 +647,11 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         Utility utility = new Utility(G.context);
         private volatile boolean running = true;
 
+        @Override
+        protected void onPreExecute() {
 
+            super.onPreExecute();
+        }
 
         @Override
         protected void onCancelled() {
@@ -837,91 +698,61 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
 
     }
 
+    public void showAd(TapsellAd ad)
+    {
+        TapsellShowOptions options=new TapsellShowOptions();
+        options.setBackDisabled(true);
 
-    class UpdateServiceConnection implements ServiceConnection {
-        public void onServiceConnected(ComponentName name, IBinder boundService) {
-            service = IUpdateCheckService.Stub
-                    .asInterface((IBinder) boundService);
-            try {
-                long vCode = service.getVersionCode(getPackageName());
-                Log.i("VERSION","new version code: "+vCode);
-                utility.SavePref(utility.NEW_VERSION, String.valueOf(vCode));
-                Log.i("VERSION","app version code: "+utility.getAppVersionNumber());
-                if (vCode > utility.getAppVersionNumber())
-                    showUpdateDialog();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Log.d(TAG, "onServiceConnected(): Connected");
-        }
 
-        public void onServiceDisconnected(ComponentName name) {
-            service = null;
-            Log.d(TAG, "onServiceDisconnected(): Disconnected");
-        }
-    }
-
-    private void showUpdateDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("بروز رسانی");
-        builder.setMessage("لطفا برنامه رو بروز رسانی کنید");
-        builder.setCancelable(false);
-        builder.setPositiveButton("بروز رسانی", new DialogInterface.OnClickListener() {
+        ad.show(G.context, options, new TapsellAdShowListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("bazaar://details?id=" + getPackageName()));
-                    intent.setPackage("com.farsitel.bazaar");
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(Main.this, "برنامه بازار نصب نیست", Toast.LENGTH_SHORT).show();
-                    utility.closeApp();
-                }
+            public void onOpened(TapsellAd tapsellAd) {
+
+            }
+
+            @Override
+            public void onClosed(TapsellAd tapsellAd) {
+
             }
         });
-        builder.setNegativeButton("خروج", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                utility.closeApp();
-            }
-        });
-
-        builder.show();
     }
 
     private void loadAd() {
-        Tapsell.requestAd(G.context, "5b5599b96c1dec000183928b", new TapsellAdRequestOptions(CACHE_TYPE_CACHED), new TapsellAdRequestListener() {
+        Tapsell.requestAd(G.context, "5b5599b96c1dec000183928b"	, new TapsellAdRequestOptions(CACHE_TYPE_CACHED), new TapsellAdRequestListener() {
 
 
             @Override
-            public void onError(String error) {
-                Log.i("Tapsell", error);
+            public void onError (String error)
+            {
+                Log.i("Tapsell",error);
             }
 
             @Override
-            public void onAdAvailable(TapsellAd ad) {
+            public void onAdAvailable (TapsellAd ad)
+            {
 
-                G.adver = ad;
-                Log.i("Tapsell", "Ad is available");
+                G.adver=ad;
+                Log.i("Tapsell","Ad is available");
 
 
             }
 
             @Override
-            public void onNoAdAvailable() {
-                Log.i("Tapsell", "NoAdAvailable");
+            public void onNoAdAvailable ()
+            {
+                Log.i("Tapsell","NoAdAvailable");
             }
 
             @Override
-            public void onNoNetwork() {
-                Log.i("Tapsell", "NoNetwork");
+            public void onNoNetwork ()
+            {
+                Log.i("Tapsell","NoNetwork");
             }
 
             @Override
-            public void onExpiring(TapsellAd ad) {
-                Log.i("Tapsell", "Expiring");
+            public void onExpiring (TapsellAd ad)
+            {
+                Log.i("Tapsell","Expiring");
             }
         });
 
@@ -973,7 +804,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             if (running) {
                 AppropriateSoldiers.clear();
                 return utility.Deserialize(utility.GetSoldierInfo(utility.getUniquePsuedoID(), "GetAppropriateSoldiers"), G.AppropriateSoldiers);
-            } else
+            }else
                 return null;
         }
 
@@ -983,28 +814,30 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             if (running) {
 
                 if (s.equals("error"))
-                    Main.ShowMessage("خطا در خواندن اطلاعات از سرور");
+                    Main.ShowMessage ("خطا در خواندن اطلاعات از سرور");
                 else
                     startActivity(new Intent(Main.this, com.nikosoft.soldierfinder.AppropriateSoldiers.class));
 
 
-            } else {
-                MaterialDialog.Builder mbuilder = new MaterialDialog.Builder(G.context);
-                mbuilder.setTitle("خطا در اتصال به سرور");
-                mbuilder.setMessage("لطفا بعدا تلاش کنید");
-                mbuilder.setPositiveButton("باشه", null);
-                mbuilder.setButtonTextColor(getResources().getColor(R.color.colorPrimary));
-                mbuilder.setBackgroundColor(getResources().getColor(R.color.backColor));
-                mbuilder.setTitleColor(getResources().getColor(android.R.color.white));
-                mbuilder.setMessageColor(getResources().getColor(R.color.textColor));
-                dialog1 = mbuilder.create();
-                dialog1.show();
+                } else {
+                    MaterialDialog.Builder mbuilder = new MaterialDialog.Builder(G.context);
+                    mbuilder.setTitle("خطا در اتصال به سرور");
+                    mbuilder.setMessage("لطفا بعدا تلاش کنید");
+                    mbuilder.setPositiveButton("باشه", null);
+                    mbuilder.setButtonTextColor(getResources().getColor(R.color.colorPrimary));
+                    mbuilder.setBackgroundColor(getResources().getColor(R.color.backColor));
+                    mbuilder.setTitleColor(getResources().getColor(android.R.color.white));
+                    mbuilder.setMessageColor(getResources().getColor(R.color.textColor));
+                    dialog1 = mbuilder.create();
+                    dialog1.show();
+                }
+                dialog.dismiss();
             }
-            dialog.dismiss();
+
+
         }
 
 
-    }
 
 
     //delete user information
@@ -1047,11 +880,10 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         @Override
         protected String doInBackground(Void... voids) {
             if (running) {
-                String res = utility.GetSoldierInfo(utility.getUniquePsuedoID(), "DeleteSoldierInfo");
-                if (res.equals("true")) {
+                String res=utility.GetSoldierInfo(utility.getUniquePsuedoID(),"DeleteSoldierInfo");
+                if(res.equals("true")){
                     fillProfile = true;
-                    return res;
-                }
+                    return res;}
 
             }
             return "";
@@ -1063,11 +895,11 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             if (running) {
 
                 if (s.equals("null"))
-                    Main.ShowMessage("اطلاعات شما ثبت نشده است");
-                else if (s.equals("true"))
-                    Main.ShowMessage("اطلاعات شما با موفقیت حذف شد");
+                    Main.ShowMessage ("اطلاعات شما ثبت نشده است");
+                else if(s.equals("true"))
+                    Main.ShowMessage ("اطلاعات شما با موفقیت حذف شد");
                 else
-                    Main.ShowMessage("خطا در انجام عملیات");
+                    Main.ShowMessage ("خطا در انجام عملیات");
 
             } else {
                 MaterialDialog.Builder mbuilder = new MaterialDialog.Builder(G.context);
@@ -1117,10 +949,10 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         protected void onPostExecute(String res) {
             super.onPostExecute(res);
             if (running) {
-                if (res.equals("true"))
-                    utility.SavePref("Installinfo", BuildConfig.VERSION_CODE + "");
+                if(res.equals("true"))
+                    utility.SavePref("Installinfo",BuildConfig.VERSION_CODE+"");
                 else
-                    utility.SavePref("Installinfo", "false");
+                    utility.SavePref("Installinfo","false");
             }
 
         }
