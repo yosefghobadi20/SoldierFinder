@@ -2,6 +2,8 @@ package com.nikosoft.soldierfinder;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -35,6 +37,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Yosef on 28/03/2017.
  */
 public class Utility {
+    public static final String NEW_VERSION ="new_version" ;
     static Context _context;
 
 
@@ -586,4 +589,73 @@ public class Utility {
         System.exit(1);
     }
 
+    public String convertRialToToman(String priceRial,boolean formated) {
+        String toman = "";
+        if (priceRial.contains("صفر ریال")) {
+            if(formated)
+                return "صفر تومان";
+            else
+                return "0";
+        } else {
+            ArrayList<String> digits = new ArrayList<>(Arrays.asList("۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹", "۰"));
+
+            for (int i = 0; i < priceRial.length(); i++) {
+                if (digits.contains(priceRial.substring(i, i + 1))) {
+                    toman += priceRial.substring(i, i + 1);
+                }
+            }
+        }
+        toman=toman.substring(0,toman.length()-1);
+        if(formated)
+            return farsinumber(threeDigit(toman, ',')) + " تومان";
+        else
+            return toman;
+    }
+
+    public String threeDigit(String input, char separator) {
+
+
+        if (input.length() > 3) {
+            int seprate = 0;
+            String output = "";
+            input = input.replaceAll(" ", "");
+            char[] array = input.toCharArray();
+            for (int i = array.length - 1; i >= 0; i--) {
+                output = array[i] + output;
+                seprate++;
+                if (seprate == 3) {
+                    if (i != 0)
+                        output = separator + output;
+                    seprate = 0;
+                }
+            }
+            return output;
+        }
+        return input;
+    }
+
+    public Boolean isConnectedInternet(Context context) {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return (activeNetworkInfo != null && activeNetworkInfo.isConnected());
+
+    }
+
+    public String getRSAKey(Context context)
+    {
+        return context.getString(R.string.RSA_KEY);
+    }
+
+    public int getAppVersionNumber()
+    {
+        int version = 0;
+        try {
+            PackageInfo pInfo = _context.getPackageManager().getPackageInfo(_context.getPackageName(), 0);
+            version = pInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return version;
+    }
 }
