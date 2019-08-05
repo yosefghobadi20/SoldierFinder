@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.nikosoft.soldierfinder"
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 5
         versionName "2.3"
     }
@@ -28,7 +28,7 @@ android {
 
 dependencies {
     //implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support.constraint:constraint-layout:+'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     androidTestImplementation 'junit:junit:4.12'
     implementation 'jp.wasabeef:recyclerview-animators:1.2.2'
     implementation 'com.balysv:material-ripple:1.0.2'
@@ -44,20 +44,20 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.1.1'
     //implementation 'com.android.support:support-v7:27.+'
-    implementation 'com.android.support:cardview-v7:27.+'
-    implementation 'com.android.support:recyclerview-v7:27.+'
-    implementation 'com.android.support:design:27.+'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
     implementation('com.weiwangcn.betterspinner:library-material:1.1.0') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.rengwuxian.materialedittext', module: 'library'
     }
-    compile('com.github.smtchahal:MaterialSpinner:1.1.7') {
+    implementation('com.github.smtchahal:MaterialSpinner:1.1.7') {
         exclude group: 'com.nineoldandroids', module: 'library'
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
     implementation 'com.github.michael-rapp:android-material-dialog:4.1.0'
     implementation 'com.github.faruktoptas:FancyShowCaseView:1.0.0'
-    compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.0'
+    implementation 'com.google.code.ksoap2-android:ksoap2-android:3.6.0'
     repositories {
         flatDir {
             dirs 'libs'
