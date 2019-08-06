@@ -110,7 +110,7 @@ public class Details extends G {
         txt_req_padegan.setText(intent.getStringExtra("RequestPadegan"));
         txt_sendout_date.setText(intent.getStringExtra("Send_OutDate"));
         txt_req_date.setText(intent.getStringExtra("RequestDate"));
-        if(utility.RetrievePref("ispayed").equals("ok"))
+        if(utility.RetrievePref(Utility.PAID).equals("ok"))
             txt_phone.setText(intent.getStringExtra("Phone"));
         else
             txt_phone.setText("برنامه را ارتقا دهید");
