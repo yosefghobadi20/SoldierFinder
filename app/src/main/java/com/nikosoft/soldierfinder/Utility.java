@@ -39,6 +39,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class Utility {
     public static final String NEW_VERSION ="new_version" ;
     public static final String FILL_PROFILE ="fill_profile" ;
+    public static final String PAID = "ispayed";
     static Context _context;
 
 

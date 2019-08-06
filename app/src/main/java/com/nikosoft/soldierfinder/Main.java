@@ -317,12 +317,12 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
                                         if (inventory.hasPurchase(SKU_PREMIUM)) {
                                             Log.d(TAG, "اشتراک ماهانه" + inventory.getPurchase(SKU_PREMIUM).getOriginalJson());
                                             //show phone number to user
-                                            utility.SavePref("ispayed", "ok");
+                                            utility.SavePref(Utility.PAID, "ok");
                                             Toast.makeText(Main.this, "برنامه قبلا ارتقا پیدا کرده است", Toast.LENGTH_SHORT).show();
 
 
                                         } else {
-                                            utility.SavePref("ispayed", "buy");
+                                            utility.SavePref(Utility.PAID, "buy");
 
                                             mHelper.launchPurchaseFlow(Main.this, SKU_PREMIUM, 1, new IabHelper.OnIabPurchaseFinishedListener() {
                                                 @Override
@@ -333,7 +333,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
                                                     }
                                                     if (info.getSku().equals(SKU_PREMIUM) & info.getDeveloperPayload().equals("soldierfinder")) {
                                                         Toast.makeText(Main.this, "پرداخت با موفقیت انجام شد", Toast.LENGTH_LONG).show();
-                                                        utility.SavePref("ispayed", "ok");
+                                                        utility.SavePref(Utility.PAID, "ok");
 
                                                     } else
                                                         Toast.makeText(Main.this, "پرداخت با خطا مواجه شد", Toast.LENGTH_LONG).show();
@@ -623,6 +623,10 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             if (running) {
                 Intent intent = new Intent(Main.this, profile.class);
                 if (s != null) {
+                    if(s.Name!=null)
+                        utility.SavePref(Utility.FILL_PROFILE,"true");
+                    else
+                        utility.SavePref(Utility.FILL_PROFILE,"false");
                     try {
                         intent.putExtra("ID", s.ID);
                         intent.putExtra("Name", s.Name);
@@ -778,30 +782,29 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
 
         @Override
         protected String doInBackground(Void... voids) {
-            if (running) {
-                Soldier_Info soldier_info = utility.Deserialize_soldier_info(utility.GetSoldierInfo(utility.getUniquePsuedoID(), "GetSoldierInfo"));
+           /* if (running) {
+                Soldier_Info soldier_info = utility.Deserialize_soldier_info(utility.GetSoldierInfo(utility.getUniquePsuedoID(),"GetSoldierInfo"));
                 if (soldier_info.Name == null) {
                     fillProfile = true;
                 } else
                     fillProfile = false;
                 return utility.CheckPayment();
             } else
+                return null;*/
+            if(!(utility.RetrievePref(Utility.PAID).equals("buy")|utility.RetrievePref(Utility.PAID).equals("ok")))
+                return utility.CheckPayment();
+            else
                 return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if (running) {
+            if (s!=null) {
 
-                utility.SavePref("ispayed", s);
-//اگر اطلاعات سرباز هنوز وارد نشده بود
-//                if (fillProfile & G.FirstRun==false) {
-//                    Intent mainIntent = new Intent(Main.this, profile.class);
-//                    Main.this.startActivity(mainIntent);
-//                }
+                utility.SavePref(Utility.PAID, s);
+
             }
-            //dialog.dismiss();
         }
 
     }
