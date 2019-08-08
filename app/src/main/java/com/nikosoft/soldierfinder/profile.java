@@ -5,9 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import de.mrapp.android.dialog.MaterialDialog;
@@ -27,7 +30,6 @@ import ir.hamsaa.persiandatepicker.Listener;
 import ir.hamsaa.persiandatepicker.PersianDatePickerDialog;
 import ir.hamsaa.persiandatepicker.util.PersianCalendar;
 //import me.zhanghai.android.materialedittext.MaterialEditText;
-import me.toptas.fancyshowcase.FancyShowCaseView;
 import smtchahal.materialspinner.MaterialSpinner;
 
 
@@ -74,6 +76,8 @@ public class profile extends G {
     private boolean Move = false;
     private boolean Tarkhis = false;
 
+    Utility utility;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +92,7 @@ public class profile extends G {
             Tarkhis = true;
         }
 
+        utility = new Utility(this);
         sp_cur_state = (MaterialSpinner) findViewById(R.id.sp_cur_state);
         sp_cur_city = (MaterialSpinner) findViewById(R.id.sp_cur_city);
         sp_req_state = (MaterialSpinner) findViewById(R.id.sp_req_state);
@@ -300,10 +305,28 @@ public class profile extends G {
                                                             if (ValidateSpinner(sp_organ)) {
                                                                 if (ValidateSpinner(sp_suborgan)) {
                                                                     //if (ValidateEditText(txt_description)) {
-                                                                        if (Utility.isNetworkAvailable(profile.context))
-                                                                            new SendInformation().execute();
-                                                                        else
-                                                                            Toast.makeText(profile.this, "اتصال اینترنت برقرار نیست!", Toast.LENGTH_SHORT).show();
+                                                                    if (Utility.isNetworkAvailable(profile.context)) {
+                                                                        Soldier_Info info = new Soldier_Info();
+
+                                                                        info.Name           = txt_name.getText().toString();
+                                                                        info.Family         = txt_lastname.getText().toString();
+                                                                        info.CurrentState   = sp_cur_state.getSelectedItem().toString();
+                                                                        info.CurrentCity    = sp_cur_city.getSelectedItem().toString();
+                                                                        info.CurrentPadegan = txt_cur_padegan.getText().toString();
+                                                                        info.RequestState   = sp_req_state.getSelectedItem().toString();
+                                                                        info.RequestCity    = sp_req_city.getSelectedItem().toString();
+                                                                        info.RequestPadegan = txt_req_padegan.getText().toString();
+                                                                        info.Send_OutDate   = btn_sendout_date.getText().toString();
+                                                                        info.Phone          = txt_phone.getText().toString();
+                                                                        info.CurrentStatus  = sw_cur_status.isChecked();
+                                                                        info.MovmentStatus  = sw_movment_status.isChecked();
+                                                                        info.Rate           = (int) sp_rate.getSelectedItemId();
+                                                                        info.Organ          = (int) sp_organ.getSelectedItemId();
+                                                                        info.Sub_Organ      = (int) sp_suborgan.getSelectedItemId();
+
+                                                                        new SendInformation().execute(info);
+                                                                    } else
+                                                                        Toast.makeText(profile.this, "اتصال اینترنت برقرار نیست!", Toast.LENGTH_SHORT).show();
                                                                     //}
                                                                 }
                                                             }
@@ -327,14 +350,10 @@ public class profile extends G {
         sw_cur_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Tarkhis){
-                new FancyShowCaseView.Builder(profile.this)
-                        .focusOn(sw_cur_status)
-                        .title("اگر در حال خدمت هستید مقدار این گزینه را تغییر ندهید!")
-                        .titleStyle(R.style.MyTitleStyle1, Dialog.Gravity.CENTER_VERTICAL)
-                        .build()
-                        .show();
-                Tarkhis = false;
+                if (Tarkhis) {
+                    utility.startShowCaseView(sw_cur_status, profile.this, "وضعیت خدمت", "اگر در حال خدمت هستید مقدار این گزینه را تغییر ندهید!", new TapTargetView.Listener());
+
+                    Tarkhis = false;
                     sw_cur_status.setChecked(false);
                 }
             }
@@ -343,13 +362,9 @@ public class profile extends G {
         sw_movment_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Move){
-                    new FancyShowCaseView.Builder(profile.this)
-                            .focusOn(sw_movment_status)
-                            .title("اگر مایل به جابجایی هستید مقدار این گزینه را تغییر ندهید!")
-                            .titleStyle(R.style.MyTitleStyle1, Dialog.Gravity.CENTER_VERTICAL)
-                            .build()
-                            .show();
+                if (Move) {
+                    utility.startShowCaseView(sw_movment_status, profile.this, "وضعیت جابجایی", "اگر مایل به جابجایی هستید مقدار این گزینه را تغییر ندهید!", new TapTargetView.Listener());
+
                     Move = false;
                     sw_movment_status.setChecked(false);
                 }
@@ -359,7 +374,7 @@ public class profile extends G {
     }
     // sending soldier information to server in background
 
-    class SendInformation extends AsyncTask<Void, Void, String> {
+    class SendInformation extends AsyncTask<Soldier_Info, Void, String> {
         ProgressDialog dialog;
         ProgressDialog.Builder dialogbuilder;
         Utility utility = new Utility(G.context);
@@ -389,28 +404,29 @@ public class profile extends G {
         }
 
         @Override
-        protected String doInBackground(Void... voids) {
+        protected String doInBackground(Soldier_Info... infos) {
             String res;
             try {
                 Utility utility = new Utility(G.context);
-                res = utility.SendInformation(txt_name.getText().toString(),
-                        txt_lastname.getText().toString(),
-                        sp_cur_state.getSelectedItem().toString(),
-                        sp_cur_city.getSelectedItem().toString(),
-                        txt_cur_padegan.getText().toString(),
-                        sp_req_state.getSelectedItem().toString(),
-                        sp_req_city.getSelectedItem().toString(),
-                        txt_req_padegan.getText().toString(),
-                        btn_sendout_date.getText().toString(),
-                        txt_phone.getText().toString(),
-                        sw_cur_status.isChecked(),
-                        sw_movment_status.isChecked(),
-                        (int) sp_rate.getSelectedItemId(),
-                        (int) sp_organ.getSelectedItemId(),
-                        (int) sp_suborgan.getSelectedItemId());
-                        //txt_description.getText().toString()
+                res = utility.SendInformation(
+                        infos[0].Name,
+                        infos[0].Family,
+                        infos[0].CurrentState,
+                        infos[0].CurrentCity,
+                        infos[0].CurrentPadegan,
+                        infos[0].RequestState,
+                        infos[0].RequestCity,
+                        infos[0].RequestPadegan,
+                        infos[0].Send_OutDate,
+                        infos[0].Phone,
+                        infos[0].CurrentStatus,
+                        infos[0].MovmentStatus,
+                        infos[0].Rate,
+                        infos[0].Organ,
+                        infos[0].Sub_Organ     );
+                //txt_description.getText().toString()
                 //save phone for retrieve soldier info from server
-                utility.SavePref("phone", txt_phone.getText().toString());
+                utility.SavePref("phone", infos[0].Phone);
                 if (res.equals("error"))
                     return "خطا در دریافت اطلاعات !";
                 else if (res.equals("ok")) {
@@ -435,7 +451,7 @@ public class profile extends G {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if (s.equals("اطلاعات با موفقیت ثبت شد.")) {
-                        utility.SavePref(Utility.FILL_PROFILE,"true");
+                        utility.SavePref(Utility.FILL_PROFILE, "true");
                         Intent intent = new Intent(profile.this, Main.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -465,7 +481,7 @@ public class profile extends G {
 //            return false;
 //        }
         //this if for checking phone field 11 digit
-         if (materialEditText_name.getId() == R.id.txt_phone & materialEditText_name.getText().length() != 11) {
+        if (materialEditText_name.getId() == R.id.txt_phone & materialEditText_name.getText().length() != 11) {
             materialEditText_name.setError("شماره تلفن باید 11 رقم باشد");
             materialEditText_name.requestFocus();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

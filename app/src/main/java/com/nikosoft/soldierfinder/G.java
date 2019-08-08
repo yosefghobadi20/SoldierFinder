@@ -19,7 +19,7 @@ public class G extends AppCompatActivity {
     public static Context context;
     public static int LastID=0;
     public static Activity CurrentActivity;
-    public static boolean FirstRun=true;
+    public static boolean FirstRun=false;
     //search fields
     public static String cur_state="";
     public static String cur_city="";

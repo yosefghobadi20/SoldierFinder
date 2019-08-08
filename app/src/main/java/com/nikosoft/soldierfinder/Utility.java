@@ -1,5 +1,6 @@
 package com.nikosoft.soldierfinder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -9,6 +10,12 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.View;
+
+import androidx.appcompat.widget.Toolbar;
+
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -31,7 +38,15 @@ import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import ir.tapsell.sdk.Tapsell;
+import ir.tapsell.sdk.TapsellAd;
+import ir.tapsell.sdk.TapsellAdRequestListener;
+import ir.tapsell.sdk.TapsellAdRequestOptions;
+import ir.tapsell.sdk.TapsellAdShowListener;
+import ir.tapsell.sdk.TapsellShowOptions;
+
 import static android.content.Context.MODE_PRIVATE;
+import static ir.tapsell.sdk.TapsellAdRequestOptions.CACHE_TYPE_CACHED;
 
 /**
  * Created by Yosef on 28/03/2017.
@@ -659,5 +674,95 @@ public class Utility {
             e.printStackTrace();
         }
         return version;
+    }
+
+    public void loadAd() {
+        Tapsell.requestAd(G.context, "5b5599b96c1dec000183928b", new TapsellAdRequestOptions(CACHE_TYPE_CACHED), new TapsellAdRequestListener() {
+
+
+            @Override
+            public void onError(String error) {
+                Log.i("Tapsell", error);
+            }
+
+            @Override
+            public void onAdAvailable(TapsellAd ad) {
+
+                G.adver = ad;
+                Log.i("Tapsell", "Ad is available");
+
+
+            }
+
+            @Override
+            public void onNoAdAvailable() {
+                Log.i("Tapsell", "NoAdAvailable");
+            }
+
+            @Override
+            public void onNoNetwork() {
+                Log.i("Tapsell", "NoNetwork");
+            }
+
+            @Override
+            public void onExpiring(TapsellAd ad) {
+                Log.i("Tapsell", "Expiring");
+            }
+        });
+
+
+    }
+
+    public void showAd(TapsellAd ad)
+    {
+        TapsellShowOptions options=new TapsellShowOptions();
+        options.setBackDisabled(true);
+
+        ad.show(G.context, options, new TapsellAdShowListener() {
+            @Override
+            public void onOpened(TapsellAd tapsellAd) {
+
+            }
+
+            @Override
+            public void onClosed(TapsellAd tapsellAd) {
+            }
+        });
+
+
+        G.adver=null;
+    }
+
+    /**
+     * show target view in first app run
+     *
+     * @param view     view
+     * @param activity activity
+     * @param title    title
+     * @param text     text
+     */
+    public void startShowCaseView(View view, Activity activity, String title, String text, TapTargetView.Listener listener) {
+
+            TapTargetView.showFor(activity, TapTarget.forView(view, title, text)
+                    .transparentTarget(true)
+                    .titleTextColor(R.color.colorPrimary)
+                    .descriptionTextColor(android.R.color.white)
+                    .targetRadius(70)
+                    .tintTarget(false), listener);
+
+
+
+    }
+    public void startShowToolbarCaseView( Activity activity, Toolbar toolbar,int menuItemId, String title, String text, TapTargetView.Listener listener) {
+
+            TapTargetView.showFor(activity, TapTarget.forToolbarMenuItem(toolbar,menuItemId, title, text)
+                    .transparentTarget(true)
+                    .targetRadius(50)
+                    .titleTextColor(R.color.colorPrimary)
+                    .descriptionTextColor(android.R.color.white)
+                    .tintTarget(false), listener);
+
+
+
     }
 }

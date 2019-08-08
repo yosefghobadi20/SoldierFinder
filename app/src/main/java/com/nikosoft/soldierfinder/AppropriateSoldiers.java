@@ -3,10 +3,13 @@ package com.nikosoft.soldierfinder;
 import android.os.AsyncTask;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +35,7 @@ public class AppropriateSoldiers extends AppCompatActivity {
     public int lastITEM;
     public static boolean loading = true;
     public ProgressBar progressBar;
+    Utility utility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +50,7 @@ public class AppropriateSoldiers extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
+        utility = new Utility(this);
 
 
         //refresh Soldiers list on start....................................................
@@ -57,9 +60,7 @@ public class AppropriateSoldiers extends AppCompatActivity {
 
         //load more soldiers from server when list pull down......................................
         refreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
-        refreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener()
-
-        {
+        refreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 try {
@@ -72,14 +73,10 @@ public class AppropriateSoldiers extends AppCompatActivity {
         });
 
 
-
-
         //Lazy loading.............................................................................
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(G.context);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
-
-        {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             int totalItemCount = 0;
             int postVisiblesItems = 0;
@@ -110,77 +107,10 @@ public class AppropriateSoldiers extends AppCompatActivity {
             }
         });
         //show adver
-        if(G.adver!=null)
-        showAd(G.adver);
-    }
-    public void showAd(TapsellAd ad)
-    {
-        TapsellShowOptions options=new TapsellShowOptions();
-        options.setBackDisabled(true);
-
-       ad.show(G.context, options, new TapsellAdShowListener() {
-            @Override
-            public void onOpened(TapsellAd tapsellAd) {
-
-            }
-
-            @Override
-            public void onClosed(TapsellAd tapsellAd) {
-            }
-        });
-
-
-        G.adver=null;
+        if (G.adver != null)
+            utility.showAd(G.adver);
     }
 
-
-
-    /*private void showAd() {
-        Tapsell.requestAd(G.context, "5b5599b96c1dec000183928b"	, new TapsellAdRequestOptions(CACHE_TYPE_CACHED), new TapsellAdRequestListener() {
-            @Override
-            public void onError (String error)
-            {
-                Log.i("Tapsell",error);
-            }
-
-            @Override
-            public void onAdAvailable (TapsellAd ad)
-            {
-                Log.i("Tapsell","Ad is available");
-                TapsellShowOptions options=new TapsellShowOptions();
-                options.setBackDisabled(true);
-                ad.show(G.context, options, new TapsellAdShowListener() {
-                    @Override
-                    public void onOpened(TapsellAd tapsellAd) {
-
-                    }
-
-                    @Override
-                    public void onClosed(TapsellAd tapsellAd) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onNoAdAvailable ()
-            {
-                Log.i("Tapsell","NoAdAvailable");
-            }
-
-            @Override
-            public void onNoNetwork ()
-            {
-                Log.i("Tapsell","NoNetwork");
-            }
-
-            @Override
-            public void onExpiring (TapsellAd ad)
-            {
-                Log.i("Tapsell","Expiring");
-            }
-        });
-    }*/
 
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -196,7 +126,6 @@ public class AppropriateSoldiers extends AppCompatActivity {
             onBackPressed();
         return super.onOptionsItemSelected(item);
     }
-
 
 
     //refresh Soldiers list
@@ -289,7 +218,7 @@ public class AppropriateSoldiers extends AppCompatActivity {
                 ShowMessage("خطا در خواندن اطلاعات از سرور)");
                 return false;
             } else {
-                String s = utility.Deserialize(res,G.AppropriateSoldiers);
+                String s = utility.Deserialize(res, G.AppropriateSoldiers);
                 if (s.equals("error"))
                     ShowMessage("خطا در نوشتن اطلاعات");
                 return true;

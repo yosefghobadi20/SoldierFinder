@@ -8,8 +8,8 @@ android {
         applicationId "com.nikosoft.soldierfinder"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 6
-        versionName "2.4"
+        versionCode 8
+        versionName "2.6"
     }
     buildTypes {
         release {
@@ -56,7 +56,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
     implementation 'com.github.michael-rapp:android-material-dialog:4.1.0'
-    implementation 'com.github.faruktoptas:FancyShowCaseView:1.0.0'
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
     implementation 'com.google.code.ksoap2-android:ksoap2-android:3.6.0'
     repositories {
         flatDir {

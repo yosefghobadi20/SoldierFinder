@@ -3,10 +3,14 @@ package com.nikosoft.soldierfinder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +47,7 @@ public class Search extends G {
 
     private PersianDatePickerDialog persianDatePickerDialog;
     private PersianCalendar initDate;
+    Utility utility;
 
 
 //    private MaterialEditText txt_name;
@@ -51,16 +56,19 @@ public class Search extends G {
 //    private MaterialEditText txt_req_padegan;
 
     private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search);
 //Toolbar
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.search_toolbar);
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setHomeButtonEnabled(true);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+        utility=new Utility(this);
         sp_cur_state = (MaterialSpinner) findViewById(R.id.sp_search_cur_state);
         sp_cur_city = (MaterialSpinner) findViewById(R.id.sp_search_cur_city);
         sp_req_state = (MaterialSpinner) findViewById(R.id.sp_search_req_state);
@@ -159,7 +167,7 @@ public class Search extends G {
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
                 suborganAdapter.clear();
-                suborganAdapter.addAll(rate_organ.GetSubOrgan(position+1));
+                suborganAdapter.addAll(rate_organ.GetSubOrgan(position + 1));
                 suborganAdapter.notifyDataSetChanged();
                 //sp_suborgan.setSelection(0);
             }
@@ -174,49 +182,75 @@ public class Search extends G {
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Utility.isNetworkAvailable(Search.context))
-                {
-                    new DoSearch().execute();
-                }
-                else
+                if (Utility.isNetworkAvailable(Search.context)) {
+                    Soldier_Info soldier_info = new Soldier_Info();
+
+                    if (sp_cur_state.getSelectedItemId() == 0) {
+                        soldier_info.CurrentState = "";
+                    } else {
+                        soldier_info.CurrentState = sp_cur_state.getSelectedItem().toString();
+                    }
+                    if (sp_cur_city.getSelectedItemId() == 0) {
+                        soldier_info.CurrentCity = "";
+                    } else {
+                        soldier_info.CurrentCity = sp_cur_city.getSelectedItem().toString();
+                    }
+                    if (sp_req_state.getSelectedItemId() == 0) {
+                        soldier_info.RequestState = "";
+                    } else {
+                        soldier_info.RequestState = sp_req_state.getSelectedItem().toString();
+                    }
+                    if (sp_req_city.getSelectedItemId() == 0) {
+                        soldier_info.RequestCity = "";
+                    } else {
+                        soldier_info.RequestCity = sp_req_city.getSelectedItem().toString();
+                    }
+
+                    soldier_info.Rate = (int) sp_rate.getSelectedItemId();
+                    soldier_info.Organ = (int) sp_organ.getSelectedItemId();
+                    soldier_info.Sub_Organ = (int) sp_suborgan.getSelectedItemId();
+
+                    new DoSearch().execute(soldier_info);
+                } else
                     Toast.makeText(Search.this, "اتصال اینترنت برقرار نیست!", Toast.LENGTH_SHORT).show();
 
             }
         });
 
         int pos = states_cities.GetStatePosition(G.cur_state, states_cities.IranStates);
-        sp_cur_state.setSelection(pos+1 );
+        sp_cur_state.setSelection(pos + 1);
 
-        curCitiesAdapter.addAll(states_cities.GetStatesCities(pos));;
+        curCitiesAdapter.addAll(states_cities.GetStatesCities(pos));
+        ;
         //get city position for selecting in cur city
         pos = states_cities.GetCityPosition(G.cur_city, G.cur_state);
-        sp_cur_city.setSelection(pos+1);
+        sp_cur_city.setSelection(pos + 1);
 
         pos = states_cities.GetStatePosition(G.req_state, states_cities.IranStates);
-        sp_req_state.setSelection(pos+1);
+        sp_req_state.setSelection(pos + 1);
 
         reqCitiesAdapter.addAll(states_cities.GetStatesCities(pos));
         //get city position for selecting in req city
         pos = states_cities.GetCityPosition(G.req_city, G.req_state);
-        sp_req_city.setSelection(pos+1);
+        sp_req_city.setSelection(pos + 1);
 
         sp_rate.setSelection(G.rate);
         sp_organ.setSelection(G.organ);
         //get sub organ position for selecting in sub organ
         suborganAdapter.addAll(rate_organ.GetSubOrgan(G.organ));
         sp_suborgan.setSelection(G.sub_organ);
+
+        utility.loadAd();
     }
 
     // sending searched soldier information to server in background
 
-    class DoSearch extends AsyncTask<Void, Void, String> {
+    class DoSearch extends AsyncTask<Soldier_Info, Void, String> {
         ProgressDialog dialog;
         ProgressDialog.Builder dialogbuilder;
-        Utility utility=new Utility(G.context);
-        String cur_state;
-        String cur_city;
-        String req_state;
-        String req_city;
+        Utility utility = new Utility(G.context);
+
+
         @Override
         protected void onPreExecute() {
 
@@ -244,36 +278,18 @@ public class Search extends G {
         }
 
         @Override
-        protected String doInBackground(Void... voids) {
+        protected String doInBackground(Soldier_Info... soldier_infos) {
             String res;
             try {
 
-                if(sp_cur_state.getSelectedItemId()==0)
-                    cur_state="";
-                else
-                    cur_state=sp_cur_state.getSelectedItem().toString();
-                if(sp_cur_city.getSelectedItemId()==0)
-                    cur_city="";
-                else
-                    cur_city=sp_cur_city.getSelectedItem().toString();
-                if(sp_req_state.getSelectedItemId()==0)
-                    req_state="";
-                else
-                    req_state=sp_req_state.getSelectedItem().toString();
-                if(sp_req_city.getSelectedItemId()==0)
-                    req_city="";
-                else
-                    req_city=sp_req_city.getSelectedItem().toString();
-                Utility utility = new Utility(G.context);
                 res = utility.Search(
-                        cur_state,
-                        cur_city,
-                        req_state,
-                        req_city,
-
-                        (int)sp_rate.getSelectedItemId(),
-                        (int)sp_organ.getSelectedItemId(),
-                        (int)sp_suborgan.getSelectedItemId());
+                        soldier_infos[0].CurrentState,
+                        soldier_infos[0].CurrentCity,
+                        soldier_infos[0].RequestState,
+                        soldier_infos[0].RequestCity,
+                        soldier_infos[0].Rate,
+                        soldier_infos[0].Organ,
+                        soldier_infos[0].Sub_Organ);
 //                Log.i("cur_state =",cur_state);
 //                Log.i("cur_city =",cur_city);
 //                Log.i("req_state =",req_state);
@@ -293,22 +309,23 @@ public class Search extends G {
         @Override
         protected void onPostExecute(final String s) {
             super.onPostExecute(s);
-            Log.i("Res= ",s);
+            Log.i("Res= ", s);
             dialog.dismiss();
             G.AllSoldiers.clear();
-            utility.Deserialize(s,G.AllSoldiers);
-            Intent intent= new Intent(Search.context, Main.class);
+            utility.Deserialize(s, G.AllSoldiers);
+            Intent intent = new Intent(Search.context, Main.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             //finish();
             Main.RefreshSoldiersList();
-            Log.i("cur_state",G.cur_state);
-            Log.i("cur_city",G.cur_city);
-            Log.i("req_state",G.req_state);
-            Log.i("req_city",G.req_city);
-            Log.i("rate",G.rate+"");
-            Log.i("organ",G.organ+"");
-            Log.i("sub_organ",G.sub_organ+"");
+            Log.i("cur_state", G.cur_state);
+            Log.i("cur_city", G.cur_city);
+            Log.i("req_state", G.req_state);
+            Log.i("req_city", G.req_city);
+            Log.i("rate", G.rate + "");
+            Log.i("organ", G.organ + "");
+            Log.i("sub_organ", G.sub_organ + "");
+            utility.showAd(G.adver);
         }
     }
 
@@ -323,8 +340,8 @@ public class Search extends G {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id=item.getItemId();
-        if(id==R.id.action_back)
+        int id = item.getItemId();
+        if (id == R.id.action_back)
             onBackPressed();
         return super.onOptionsItemSelected(item);
     }
@@ -335,5 +352,9 @@ public class Search extends G {
         super.onBackPressed();
     }
 
-
+    @Override
+    public boolean onNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

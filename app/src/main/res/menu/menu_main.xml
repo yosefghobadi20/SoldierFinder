@@ -5,15 +5,15 @@
         android:id="@+id/action_search"
         android:icon="@drawable/appropriate_soldiers"
         android:orderInCategory="100"
-        android:title="Setting"
+        android:title="Search"
         app:showAsAction="always" />
 
-    <!--<item-->
-        <!--android:id="@+id/action_favorite"-->
-        <!--android:icon="@drawable/fav_off"-->
-        <!--android:orderInCategory="100"-->
-        <!--android:title="Favorite"-->
-        <!--app:showAsAction="always" />-->
+    <item
+        android:id="@+id/action_search_manual"
+        android:icon="@drawable/search"
+        android:orderInCategory="100"
+        android:title="Search_Manual"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_back"

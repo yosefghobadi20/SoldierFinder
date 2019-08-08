@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.farsitel.bazaar.IUpdateCheckService;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -55,9 +57,7 @@ import io.fabric.sdk.android.services.common.Crash;
 import ir.tapsell.sdk.*;
 import ir.tapsell.sdk.TapsellAd;
 import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
-import me.toptas.fancyshowcase.DismissListener;
-import me.toptas.fancyshowcase.FancyShowCaseView;
-import me.toptas.fancyshowcase.OnViewInflateListener;
+
 import okhttp3.internal.Util;
 
 import static ir.tapsell.sdk.TapsellAdRequestOptions.CACHE_TYPE_CACHED;
@@ -78,10 +78,8 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
     private NavigationView navigationView;
 
     //for show information for first run
-    private boolean search = false;
-    private boolean profile = false;
+
     public Utility utility;
-    private boolean fillProfile = false;
 
     //bazzar fields-----------------------
     static final String TAG = "Bazar";
@@ -110,11 +108,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         setContentView(R.layout.main);
         utility = new Utility(G.context);
-        if (G.FirstRun) {
-            search = true;
-            profile = true;
 
-        }
 
         //send install and version info
         if (!(utility.RetrievePref("Installinfo").equals(BuildConfig.VERSION_CODE + "")))
@@ -162,6 +156,7 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         fab_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (Utility.isNetworkAvailable(G.context))
                     new GetSoldierInfo().execute();
                 else
@@ -207,59 +202,42 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
 
         //SHow case view
         if (G.FirstRun) {
-            FancyShowCaseView.Builder fan = new FancyShowCaseView.Builder(this);
-            fan.customView(R.layout.showcase_main, new OnViewInflateListener() {
-                @Override
-                public void onViewInflated(View view) {
 
-                }
-            });
-            fan.titleStyle(R.style.MyTitleStyle, Dialog.Gravity.CENTER | Dialog.Gravity.TOP);
-            fan.dismissListener(new DismissListener() {
-                @Override
-                public void onDismiss(String id) {
-                    //profile
-                    new FancyShowCaseView.Builder(Main.this)
-                            .focusOn(fab_profile)
-                            .title("برای اینکه بتونیم سرباز متناسب شما رو پیدا کنیم، باید اطلاعات خودتو وارد کنی!")
-                            .titleStyle(R.style.MyTitleStyle1, Dialog.Gravity.CENTER_VERTICAL)
-                            .build()
-                            .show();
-                }
 
-                @Override
-                public void onSkipped(String id) {
-
-                }
-            });
-            fan.build().show();
-
+            utility.startShowCaseView(fab_profile, this, "پروفایل", "برای اینکه بتونیم سرباز متناسب شما رو پیدا کنیم، باید اطلاعات خودتو وارد کنی!"
+                    , new TapTargetView.Listener() {
+                        @Override
+                        public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
+                            utility.startShowToolbarCaseView(Main.this,toolbar,R.id.action_search, "جستجوی هوشمند", " برای استفاده از این گزینه باید اطلاعات خود را وارد کنید", new TapTargetView.Listener() {
+                                @Override
+                                public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
+                                    utility.startShowToolbarCaseView( Main.this,toolbar,R.id.action_search_manual, "جستجوی دستی", "برای جستجوی دستی سربازان از این گزینه استفاده کنید"
+                                            , new TapTargetView.Listener() {
+                                                @Override
+                                                public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
+                                                    super.onTargetDismissed(view, userInitiated);
+                                                }
+                                            });
+                                }
+                            });
+                        }
+                    });
 
         }
 
+        Log.i("PAYMENT", utility.RetrievePref(Utility.PAID));
 
         if (Utility.isNetworkAvailable(Main.this)) {
-            //new CheckPay().execute();
-            //new CheckNewVer().execute();
-            //چک کردن نسخه برنامه
-            initService();
+            new CheckPay().execute();
+            new CheckNewVer().execute();
 
         }
     }
 
     @Override
     protected void onResume() {
-        loadAd();
+        utility.loadAd();
         super.onResume();
-    }
-
-
-
-    private void showProgress() {
-        progressDialog = new android.app.ProgressDialog(this);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("در حال اتصال");
-        progressDialog.show();
     }
 
     private void prepareBazarWithHelper() {
@@ -463,24 +441,20 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         int id = item.getItemId();
 
         if (id == R.id.action_search) {
-            if (search) {
-                new FancyShowCaseView.Builder(this)
-                        .focusOn(findViewById(item.getItemId()))
-                        .title("با استفاده از این گزینه میتوانید سربازهای متناسب با شرایط خود را پیدا کنید !")
-                        .titleStyle(R.style.MyTitleStyle1, Dialog.Gravity.CENTER_VERTICAL)
-                        .build()
-                        .show();
-                search = false;
+
+            if (!utility.RetrievePref(Utility.FILL_PROFILE).equals("true")) {
+                fab_profile.performClick();
             } else {
-                if(!utility.RetrievePref(Utility.FILL_PROFILE).equals("true")) {
-                    fab_profile.performClick();
-                } else {
-                    if (Utility.isNetworkAvailable(G.context))
-                        new GetAppropriateSoldiers().execute();
-                    else
-                        Toast.makeText(Main.this, "اتصال اینترنت برقرار نیست!", Toast.LENGTH_SHORT).show();
-                }
+                if (Utility.isNetworkAvailable(G.context))
+                    new GetAppropriateSoldiers().execute();
+                else
+                    Toast.makeText(Main.this, "اتصال اینترنت برقرار نیست!", Toast.LENGTH_SHORT).show();
             }
+
+        } else if (id == R.id.action_search_manual) {
+
+            startActivity(new Intent(Main.this, Search.class));
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -491,44 +465,34 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
 
         if (id == R.id.menu_update) {
             {
-                String s = utility.RetrievePref("ispayed");
-                if (s.equals("ok")) {
-                    Toast.makeText(Main.this, "نرم افزار قبلا ارتقا یافته است!", Toast.LENGTH_LONG).show();
-
-                } else  {
-                    //نمایش دیالوگ برای اتصال به بازار
-
-                    showProgress();
-                    prepareBazarWithHelper();
-
-
-
-                    /*Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://nikosoft.ir/home/buysoldierfinder?serial=" + utility.getUniquePsuedoID()));
+                String s = utility.RetrievePref(Utility.PAID);
+                if (s.equals("buy")) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://nikosoft.ir/home/buysoldierfinder?serial=" + utility.getUniquePsuedoID()));
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);*/
-                }
+                    startActivity(intent);
+                } else if (s.equals("ok")) {
+                    Toast.makeText(Main.this, "نرم افزار قبلا ارتقا یافته است!", Toast.LENGTH_LONG).show();
+                } else if (s.equals("error")) {
+                    Toast.makeText(Main.this, "خطا در هنگام دریافت اطلاعات از سرور!", Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(Main.this, "خطا در خواندن اطلاعات دریافتی!", Toast.LENGTH_LONG).show();
             }
 
-        }
-        if (id == R.id.menu_search) {
-            if (search) {
-                new FancyShowCaseView.Builder(this)
-                        .focusOn(findViewById(item.getItemId()))
-                        .title("برای جستجو سربازها از این گزینه استفاده کن!")
-                        .titleStyle(R.style.MyTitleStyle1, Dialog.Gravity.CENTER_VERTICAL)
-                        .build()
-                        .show();
-                search = false;
+        } else if (id == R.id.menu_search) {
+
+            if (!utility.RetrievePref(Utility.FILL_PROFILE).equals("true")) {
+                fab_profile.performClick();
             } else {
-                if(!utility.RetrievePref(Utility.FILL_PROFILE).equals("true")) {
-                    fab_profile.performClick();
-                } else {
-                    if (Utility.isNetworkAvailable(G.context))
-                        new GetAppropriateSoldiers().execute();
-                    else
-                        Toast.makeText(Main.this, "اتصال اینترنت برقرار نیست!", Toast.LENGTH_SHORT).show();
-                }
+                if (Utility.isNetworkAvailable(G.context))
+                    new GetAppropriateSoldiers().execute();
+                else
+                    Toast.makeText(Main.this, "اتصال اینترنت برقرار نیست!", Toast.LENGTH_SHORT).show();
             }
+
+        } else if (id == R.id.action_search_manual) {
+
+            startActivity(new Intent(Main.this, Search.class));
+
         } else if (id == R.id.menu_edit) {
             startActivity(new Intent(Main.this, profile.class));
             fab_profile.performClick();
@@ -623,10 +587,10 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             if (running) {
                 Intent intent = new Intent(Main.this, profile.class);
                 if (s != null) {
-                    if(s.Name!=null)
-                        utility.SavePref(Utility.FILL_PROFILE,"true");
+                    if (s.Name != null)
+                        utility.SavePref(Utility.FILL_PROFILE, "true");
                     else
-                        utility.SavePref(Utility.FILL_PROFILE,"false");
+                        utility.SavePref(Utility.FILL_PROFILE, "false");
                     try {
                         intent.putExtra("ID", s.ID);
                         intent.putExtra("Name", s.Name);
@@ -733,14 +697,14 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
 
     @Override
     protected void onDestroy() {
-        if(mHelper!=null)
+        if (mHelper != null)
             mHelper.dispose();
 
-        if(service!=null)
-            service=null;
+        if (service != null)
+            service = null;
 
-        if (connection!=null)
-            connection=null;
+        if (connection != null)
+            connection = null;
         super.onDestroy();
     }
 
@@ -791,16 +755,16 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
                 return utility.CheckPayment();
             } else
                 return null;*/
-            if(!(utility.RetrievePref(Utility.PAID).equals("buy")|utility.RetrievePref(Utility.PAID).equals("ok")))
-                return utility.CheckPayment();
-            else
-                return null;
+            //if(!(utility.RetrievePref(Utility.PAID).equals("buy")|utility.RetrievePref(Utility.PAID).equals("ok")))
+            return utility.CheckPayment();
+//            else
+//                return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if (s!=null) {
+            if (s != null) {
 
                 utility.SavePref(Utility.PAID, s);
 
@@ -813,7 +777,6 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
 
         Utility utility = new Utility(G.context);
         private volatile boolean running = true;
-
 
 
         @Override
@@ -835,12 +798,13 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             if (running) {
                 int oldver = BuildConfig.VERSION_CODE;
                 if (newver > oldver) {
-                    MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(G.context);
+                    final MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(G.context);
                     dialogBuilder.setTitle("بروز رسانی");
                     dialogBuilder.setMessage("نسخه جدید اپلیکیشن سربازیاب موجود است");
                     dialogBuilder.setPositiveButton("دانلود", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://nikosoft.ir/home/downloadAPK")));
                         }
                     });
@@ -878,9 +842,9 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
                     .asInterface((IBinder) boundService);
             try {
                 long vCode = service.getVersionCode(getPackageName());
-                Log.i("VERSION","new version code: "+vCode);
+                Log.i("VERSION", "new version code: " + vCode);
                 utility.SavePref(utility.NEW_VERSION, String.valueOf(vCode));
-                Log.i("VERSION","app version code: "+utility.getAppVersionNumber());
+                Log.i("VERSION", "app version code: " + utility.getAppVersionNumber());
                 if (vCode > utility.getAppVersionNumber())
                     showUpdateDialog();
             } catch (Exception e) {
@@ -925,42 +889,6 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         builder.show();
     }
 
-    private void loadAd() {
-        Tapsell.requestAd(G.context, "5b5599b96c1dec000183928b", new TapsellAdRequestOptions(CACHE_TYPE_CACHED), new TapsellAdRequestListener() {
-
-
-            @Override
-            public void onError(String error) {
-                Log.i("Tapsell", error);
-            }
-
-            @Override
-            public void onAdAvailable(TapsellAd ad) {
-
-                G.adver = ad;
-                Log.i("Tapsell", "Ad is available");
-
-
-            }
-
-            @Override
-            public void onNoAdAvailable() {
-                Log.i("Tapsell", "NoAdAvailable");
-            }
-
-            @Override
-            public void onNoNetwork() {
-                Log.i("Tapsell", "NoNetwork");
-            }
-
-            @Override
-            public void onExpiring(TapsellAd ad) {
-                Log.i("Tapsell", "Expiring");
-            }
-        });
-
-
-    }
 
     //get appropriate soldiers
     class GetAppropriateSoldiers extends AsyncTask<Void, Void, String> {
@@ -1084,7 +1012,6 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             if (running) {
                 String res = utility.GetSoldierInfo(utility.getUniquePsuedoID(), "DeleteSoldierInfo");
                 if (res.equals("true")) {
-                    fillProfile = true;
                     return res;
                 }
 
@@ -1100,10 +1027,9 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
                 if (s.equals("null"))
                     Main.ShowMessage("اطلاعات شما ثبت نشده است");
                 else if (s.equals("true")) {
-                    utility.SavePref(Utility.FILL_PROFILE,"false");
+                    utility.SavePref(Utility.FILL_PROFILE, "false");
                     Main.ShowMessage("اطلاعات شما با موفقیت حذف شد");
-                }
-                else
+                } else
                     Main.ShowMessage("خطا در انجام عملیات");
 
             } else {
