@@ -28,8 +28,10 @@ public class About_app extends AppCompatActivity {
         title = (TextView) findViewById(R.id.txt_title);
         text = (TextView) findViewById(R.id.txt_text);
         rippleLayout= (MaterialRippleLayout) findViewById(R.id.lay_ripple);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.about_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         String s = BuildConfig.VERSION_NAME.toString();
         title.setText(getString(R.string.about_text_p1) + " " + s);
@@ -37,22 +39,20 @@ public class About_app extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.nikosoft.ir"));
-                startActivity(browserIntent);
+
             }
         });
 
     }
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        menu.findItem(R.id.action_search).setVisible(false);
+
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_back)
+        if (id == android.R.id.home)
             onBackPressed();
         return super.onOptionsItemSelected(item);
     }

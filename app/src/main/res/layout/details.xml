@@ -37,7 +37,7 @@
                 android:src="@drawable/artesh" />
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/details_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin" />
@@ -51,7 +51,7 @@
         android:id="@+id/lay_scroll"
         android:layout_width="match_parent"
 
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/appbar"
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">

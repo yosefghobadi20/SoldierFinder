@@ -8,7 +8,19 @@
     android:layoutDirection="rtl"
     tools:context="com.nikosoft.soldierfinder.About_app">
 
-    <include layout="@layout/app_bar" />
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/about_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/bg_toolbar"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -143,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:background="@color/colorPrimary"
-                android:text="به سایت ما سر بزنید!"
+                android:text="Nikosoft.ir"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="#ffffff" />
             </com.balysv.materialripple.MaterialRippleLayout>

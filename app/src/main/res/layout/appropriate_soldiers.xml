@@ -14,9 +14,20 @@
         android:layout_height="match_parent"
         android:padding="5dp"
         >
-        <include
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/lay_app_bar"
-            layout="@layout/app_bar"></include>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/approp_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/bg_toolbar"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </com.google.android.material.appbar.AppBarLayout>
         <com.baoyz.widget.PullRefreshLayout
             android:id="@+id/lay_refresh"
             android:layout_width="match_parent"

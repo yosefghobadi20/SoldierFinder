@@ -814,8 +814,8 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
                             utility.closeApp();
                         }
                     });
-                    MaterialDialog dialog = dialogBuilder.create();
-                    dialog.show();
+                     dialogBuilder.create().show();
+
                 }
 
 

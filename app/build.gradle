@@ -8,8 +8,8 @@ android {
         applicationId "com.nikosoft.soldierfinder"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 8
-        versionName "2.6"
+        versionCode 9
+        versionName "2.9"
     }
     buildTypes {
         release {

@@ -331,17 +331,13 @@ public class Search extends G {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        menu.findItem(R.id.action_search).setVisible(false);
-//        menu.findItem(R.id.action_menu).setVisible(false);
-        //menu.findItem(R.id.action_favorite).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_back)
+        if (id == android.R.id.home)
             onBackPressed();
         return super.onOptionsItemSelected(item);
     }

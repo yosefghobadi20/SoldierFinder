@@ -62,8 +62,9 @@ public class Details extends G {
         setContentView(R.layout.details);
         Utility utility=new Utility(G.context);
 
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.details_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         collapsingToolbarLayout=findViewById(R.id.collaps_detail);
@@ -223,14 +224,7 @@ public class Details extends G {
 
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        menu.findItem(R.id.action_search).setVisible(false);
-//        menu.findItem(R.id.action_menu).setVisible(false);
-//        if (isFavorite(ID)) {
-//            menu.findItem(R.id.action_favorite).setIcon(getResources().getDrawable(R.drawable.fav_on));
-//            favorite = true;
-//        } else
-//            menu.findItem(R.id.action_favorite).setIcon(getResources().getDrawable(R.drawable.fav_off));
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -238,7 +232,7 @@ public class Details extends G {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        if (id == R.id.action_back)
+        if (id == android.R.id.home)
             //NavUtils.navigateUpFromSameTask(this);
             onBackPressed();
 //        if (id == R.id.action_favorite)

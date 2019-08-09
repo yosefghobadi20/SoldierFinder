@@ -47,9 +47,10 @@ public class AppropriateSoldiers extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_main);
         recyclerView = (RecyclerView) findViewById(R.id.recy);
         refreshLayout = (PullRefreshLayout) findViewById(R.id.lay_refresh);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.approp_toolbar);
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         utility = new Utility(this);
 
 
@@ -114,15 +115,14 @@ public class AppropriateSoldiers extends AppCompatActivity {
 
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        menu.findItem(R.id.action_search).setVisible(false);
+
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_back)
+        if (id == android.R.id.home)
             onBackPressed();
         return super.onOptionsItemSelected(item);
     }
