@@ -228,9 +228,15 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
         Log.i("PAYMENT", utility.RetrievePref(Utility.PAID));
 
         if (Utility.isNetworkAvailable(Main.this)) {
-            new CheckPay().execute();
-            new CheckNewVer().execute();
-
+            //connect to nikosoft server
+            if(Utility.NIKOSOFT_BILLING) {
+                new CheckPay().execute();
+                new CheckNewVer().execute();
+            }
+            else {
+                //connect to bazaar server
+                initService();
+            }
         }
     }
 
@@ -238,6 +244,15 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
     protected void onResume() {
         utility.loadAd();
         super.onResume();
+    }
+
+
+
+    private void showProgress() {
+        progressDialog = new android.app.ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("در حال اتصال");
+        progressDialog.show();
     }
 
     private void prepareBazarWithHelper() {
@@ -467,9 +482,18 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
             {
                 String s = utility.RetrievePref(Utility.PAID);
                 if (s.equals("buy")) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://nikosoft.ir/home/buysoldierfinder?serial=" + utility.getUniquePsuedoID()));
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                    if(Utility.NIKOSOFT_BILLING) {
+                        //connect to nikosoft server
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://nikosoft.ir/home/buysoldierfinder?serial=" + utility.getUniquePsuedoID()));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                    else {
+                        //connect to bazaar server
+                        showProgress();
+                        prepareBazarWithHelper();
+                    }
+
                 } else if (s.equals("ok")) {
                     Toast.makeText(Main.this, "نرم افزار قبلا ارتقا یافته است!", Toast.LENGTH_LONG).show();
                 } else if (s.equals("error")) {
@@ -489,10 +513,9 @@ public class Main extends G implements NavigationView.OnNavigationItemSelectedLi
                     Toast.makeText(Main.this, "اتصال اینترنت برقرار نیست!", Toast.LENGTH_SHORT).show();
             }
 
-        } else if (id == R.id.action_search_manual) {
-
-            startActivity(new Intent(Main.this, Search.class));
-
+        } else if (id == R.id.menu_search_manual) {
+            Intent intent=new Intent(Main.this, Search.class);
+            startActivity(intent);
         } else if (id == R.id.menu_edit) {
             startActivity(new Intent(Main.this, profile.class));
             fab_profile.performClick();

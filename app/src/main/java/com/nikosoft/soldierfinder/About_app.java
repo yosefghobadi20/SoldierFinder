@@ -39,7 +39,8 @@ public class About_app extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.nikosoft.ir"));
+                startActivity(browserIntent);
             }
         });
 

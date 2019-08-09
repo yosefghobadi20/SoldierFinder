@@ -10,7 +10,8 @@
         <item
             android:id="@+id/menu_search"
             android:icon="@drawable/appropriate_soldiers"
-            android:title="جستجو هوشمند" /><item
+            android:title="جستجو هوشمند" />
+        <item
             android:id="@+id/menu_search_manual"
             android:icon="@drawable/search"
             android:title="جستجو دستی" />
